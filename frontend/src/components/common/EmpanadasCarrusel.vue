@@ -123,31 +123,34 @@ const itemsMenu = computed(() => {
                       (combo.sabores_info && combo.sabores_info.length > 1)
 
     if (esVariado) {
-      const variadoId = `variado-${combo.id_combo}`
-      if (!itemsMap.has(variadoId)) {
-        itemsMap.set(variadoId, {
-          id: variadoId,
-          tipo: 'variado', // Recuperado para el Badge verde
+      
+      const variadoKey = 'COMBO_VARIADO_UNICO' 
+      
+      if (!itemsMap.has(variadoKey)) {
+        itemsMap.set(variadoKey, {
+          id: variadoKey,
+          tipo: 'variado',
           nombre: 'Combo Variado',
-          descripcion: 'Mezcla de sabores seleccionados', // Recuperado
+          descripcion: 'Mezcla de sabores seleccionados',
           precio: combo.precio,
-          tasa: tasaUSD.value, // Nueva integración
+          tasa: tasaUSD.value,
           cantidad_empanadas: combo.cantidad_empanadas,
           imagen: '/images/sabores/default.jpg',
-          sabores: combo.sabores_info || [] // Recuperado para los mini-badges
+          sabores: combo.sabores_info || []
         })
       }
     } 
     else if (combo.sabores_info && combo.sabores_info.length === 1) {
       const sabor = combo.sabores_info[0]
+      // Para sabores individuales seguimos usando su ID único para que aparezcan todos
       if (sabor.id_sabor && !itemsMap.has(sabor.id_sabor)) {
         itemsMap.set(sabor.id_sabor, {
           id: sabor.id_sabor,
-          tipo: 'sabor', // Recuperado para el Badge amarillo
+          tipo: 'sabor',
           nombre: sabor.nombre,
-          descripcion: `Combo de ${sabor.nombre}`, // Recuperado
+          descripcion: `Combo de ${sabor.nombre}`,
           precio: combo.precio,
-          tasa: tasaUSD.value, // Nueva integración
+          tasa: tasaUSD.value,
           cantidad_empanadas: combo.cantidad_empanadas,
           imagen: sabor.imagen,
           sabores: [sabor]
