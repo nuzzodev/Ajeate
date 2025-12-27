@@ -2,36 +2,25 @@
   <section id="contacto" class="py-5 bg-white">
     <div class="container">
       <div class="text-center mb-5">
-        <h2 class="display-5 fw-bold">Realiza tu Pedido:</h2>
-        <p class="lead text-muted">¿Tienes alguna pregunta? Escríbenos</p>
+        <h2 class="fw-bold mb-4">¡Pide por WhatsApp!</h2>
+              <p class="text-muted mb-4">Escanea el código para chatear con nosotros directamente.</p>
       </div>
       
       <div class="row justify-content-center">
         <div class="col-lg-8">
-          <form class="card border-0 shadow-lg p-4">
-            <div class="row mb-3">
-              <div class="col-md-6">
-                <label for="nombre" class="form-label">Nombre</label>
-                <input type="text" class="form-control" id="nombre" required>
+          <section class="qr-section py-5 bg-white text-center">
+            <div class="container">
+              <div class="qr-container p-4 d-inline-block shadow rounded bg-light border border-warning border-3">
+                <img :src="qrUrl" alt="QR WhatsApp" class="img-fluid" style="max-width: 200px;">
               </div>
-              <div class="col-md-6">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" required>
+              
+              <div class="mt-4">
+                <a :href="whatsappLink" target="_blank" class="btn btn-success btn-lg">
+                  <i class="bi bi-whatsapp"></i> Chatear ahora
+                </a>
               </div>
             </div>
-            
-            <div class="mb-3">
-              <label for="asunto" class="form-label">Asunto</label>
-              <input type="text" class="form-control" id="asunto" required>
-            </div>
-            
-            <div class="mb-3">
-              <label for="mensaje" class="form-label">Mensaje</label>
-              <textarea class="form-control" id="mensaje" rows="4" required></textarea>
-            </div>
-            
-            <button type="submit" class="btn btn-warning btn-lg w-100">Enviar Mensaje</button>
-          </form>
+          </section>
           
           <div class="row text-center mt-5">
             <div class="col-md-4 mb-3">
@@ -66,6 +55,20 @@
 
 <script>
 export default {
-  name: 'Contact'
+  name: 'Contact',
+  data() {
+    const telefono = "584129080626"; // <--- Tu número aquí
+    const mensaje = encodeURIComponent("Hola Ajeate, ¡quiero pedir empanadas!");
+    const link = `https://wa.me/${telefono}?text=${mensaje}`;
+
+    return {
+      whatsappLink: link,
+      // Usamos una API externa que genera el QR pasándole el link como dato
+      qrUrl: `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(link)}`
+    }
+  }
 }
+
+  
+
 </script>

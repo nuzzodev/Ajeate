@@ -22,7 +22,7 @@
           <div class="mt-3">
             <a href="#" class="text-white me-3"><i class="bi bi-facebook fs-4"></i></a>
             <a href="https://www.instagram.com/ajeate_58/" class="text-white me-3"><i class="bi bi-instagram fs-4"></i></a>
-            <a href="#" class="text-white"><i class="bi bi-whatsapp fs-4"></i></a>
+            <a href="https://api.whatsapp.com/send/?phone=584129080626&text=Hola+Ajeate%2C+%C2%A1quiero+pedir+empanadas%21&type=phone_number&app_absent=0" class="text-white"><i class="bi bi-whatsapp fs-4"></i></a>
           </div>
         </div>
       </div>

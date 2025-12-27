@@ -12,8 +12,8 @@
             Cada empanada es una obra maestra de sabor y tradición.
           </p>
           <div class="d-flex gap-3">
-            <button class="btn btn-warning btn-lg">Ver Menú</button>
-            <button class="btn btn-outline-dark btn-lg">Pedir Ahora</button>
+            <a href="#productos" class="col-lg-3 btn btn-warning btn-lg">Ver Menú</a>
+            <a href="#ubicacion" class="col-lg-3 btn btn-dark btn-hover btn-lg">Pedir ahora</a>
           </div>
         </div>
         

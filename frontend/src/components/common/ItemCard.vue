@@ -1,5 +1,5 @@
 <template>
-  <div class="card h-100  shadow-sm item-card rounded-3 border border-danger border-3">
+  <div class="card h-100  shadow-sm item-card rounded-3 border border-warning border-3 p-1">
     <!-- Imagen -->
     <div class="card-img-top position-relative " style="height: 200px; overflow: hidden;">
       <img :src="imagenItem" 
