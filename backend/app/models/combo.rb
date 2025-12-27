@@ -8,6 +8,7 @@ class Combo < ApplicationRecord
   has_many :combo_detalles, foreign_key: 'combo_fk', primary_key: 'id_combo'
   has_many :bandejas, through: :combo_detalles
   has_many :sabores, through: :bandejas
+  accepts_nested_attributes_for :combo_detalles
   
   validates :id_combo, presence: true, uniqueness: true
   validates :cantidad_empanadas, numericality: { greater_than: 0 }

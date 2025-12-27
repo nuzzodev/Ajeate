@@ -122,7 +122,8 @@ class CombosController < ApplicationController
   end
 
   def combo_params
-    params.require(:combo).permit(:id_combo, :cantidad_empanadas, :tipo_combo_fk, :pedido_fk)
+    params.require(:combo).permit(:id_combo, :cantidad_empanadas, :tipo_combo_fk, :pedido_fk,combo_detalles_attributes: [ :cantidad_por_sabor, :bandeja_fk]
+  )
   end
   
   def filtrar_por_sabor(combos, sabor_param)

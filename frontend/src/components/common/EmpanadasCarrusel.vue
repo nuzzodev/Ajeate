@@ -114,54 +114,51 @@ onMounted(async () => {
 const itemsMenu = computed(() => {
   if (!Array.isArray(props.combos) || props.combos.length === 0) return []
   
-  const itemsMap = new Map()
-  
-  props.combos.forEach(combo => {
-    const tipoCombo = combo.tipo_combo?.nombre || 'Especial'
-    const esVariado = tipoCombo.toLowerCase().includes('variado') || 
-                      tipoCombo.toLowerCase().includes('mixto') ||
-                      (combo.sabores_info && combo.sabores_info.length > 1)
+  const cartas = []
+  const saboresVistos = new Set()
 
-    if (esVariado) {
-      
-      const variadoKey = 'COMBO_VARIADO_UNICO' 
-      
-      if (!itemsMap.has(variadoKey)) {
-        itemsMap.set(variadoKey, {
-          id: variadoKey,
-          tipo: 'variado',
-          nombre: 'Combo Variado',
-          descripcion: 'Mezcla de sabores seleccionados',
-          precio: combo.precio,
-          tasa: tasaUSD.value,
-          cantidad_empanadas: combo.cantidad_empanadas,
-          imagen: '/images/sabores/default.jpg',
-          sabores: combo.sabores_info || []
-        })
-      }
-    } 
-    else if (combo.sabores_info && combo.sabores_info.length === 1) {
+  props.combos.forEach(combo => {
+    if (combo.sabores_info && combo.sabores_info.length === 1) {
       const sabor = combo.sabores_info[0]
-      // Para sabores individuales seguimos usando su ID único para que aparezcan todos
-      if (sabor.id_sabor && !itemsMap.has(sabor.id_sabor)) {
-        itemsMap.set(sabor.id_sabor, {
-          id: sabor.id_sabor,
+      
+      if (!saboresVistos.has(sabor.id_sabor)) {
+        cartas.push({
+          id: `sabor-${sabor.id_sabor}`,
           tipo: 'sabor',
           nombre: sabor.nombre,
-          descripcion: `Combo de ${sabor.nombre}`,
-          precio: combo.precio,
+          descripcion: `Combo tradicional de ${sabor.nombre}`,
+          precio: combo.precio || 0, 
           tasa: tasaUSD.value,
           cantidad_empanadas: combo.cantidad_empanadas,
-          imagen: sabor.imagen,
+          imagen: sabor.imagen || '/images/sabores/default.jpg',
           sabores: [sabor]
         })
+        saboresVistos.add(sabor.id_sabor)
       }
     }
   })
-  
-  return Array.from(itemsMap.values())
-})
 
+  const comboVariadoEjemplo = props.combos.find(c => 
+    (c.tipo_combo?.nombre || '').toLowerCase().includes('variado') || 
+    (c.sabores_info && c.sabores_info.length > 1)
+  )
+
+  if (comboVariadoEjemplo) {
+    cartas.push({
+      id: 'variado-unico',
+      tipo: 'variado',
+      nombre: 'Combo Variado',
+      descripcion: '¡Combina tus sabores favoritos!',
+      precio: comboVariadoEjemplo.precio || 0,
+      tasa: tasaUSD.value,
+      cantidad_empanadas: comboVariadoEjemplo.cantidad_empanadas,
+      imagen: '/images/sabores/variado.jpg', 
+      sabores: comboVariadoEjemplo.sabores_info
+    })
+  }
+
+  return cartas.sort((a, b) => a.nombre.localeCompare(b.nombre))
+})
 // Agrupar items en slides de 3 para carrusel
 const itemsAgrupados = computed(() => {
   if (itemsMenu.value.length === 0) return []

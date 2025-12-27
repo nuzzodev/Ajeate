@@ -31,8 +31,8 @@ export const empanadasService = {
   },
 
   // Si no existe el endpoint destacados, usar todos con límite
-  async getCombosParaCarrusel(limit = 6) {
+  async getCombosParaCarrusel() {
     const combos = await this.getCombos();
-    return combos.slice(0, limit);
+    return combos
   }
 };
