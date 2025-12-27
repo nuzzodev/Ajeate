@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  id_combo: 1
+  cantidad_empanadas: 1
+  tipo_combo_fk: 1
+  pedido_fk: 1
+
+two:
+  id_combo: 1
+  cantidad_empanadas: 1
+  tipo_combo_fk: 1
+  pedido_fk: 1

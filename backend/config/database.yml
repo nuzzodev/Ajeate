@@ -1,0 +1,21 @@
+# config/database.yml
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  username: postgres
+  password: 10052006  # Si tienes password, si no déjalo vacío
+  host: localhost
+  port: 5432
+
+development:
+  <<: *default
+  database: ajeate_DB
+
+test:
+  <<: *default
+  database: ajeate_DB
+
+production:
+  <<: *default
+  database: ajeate_DB

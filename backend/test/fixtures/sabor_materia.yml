@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  id_sabor_materia: 1
+  sabor_fk: 1
+  materia_prima_fk: 1
+
+two:
+  id_sabor_materia: 1
+  sabor_fk: 1
+  materia_prima_fk: 1

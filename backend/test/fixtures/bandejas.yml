@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  id_bandeja: 1
+  fecha_produccion: 2025-12-21
+  cantidad_disponible: 1
+  sabor_fk: 1
+
+two:
+  id_bandeja: 1
+  fecha_produccion: 2025-12-21
+  cantidad_disponible: 1
+  sabor_fk: 1
