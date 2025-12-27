@@ -1,0 +1,13 @@
+<template>
+  <div class="container mt-4">
+    <h1 class="mb-4">Pedidos</h1>
+    <PedidosCrud />
+  </div>
+</template>
+
+<script>
+import PedidosCrud from '../components/crud/PedidosCrud.vue'
+export default {
+  components: { PedidosCrud }
+}
+</script>

@@ -1,0 +1,79 @@
+/* Estilos para el componente TasaCambio */
+.tasa-medalla {
+  position: fixed;
+  top: 100px;
+  right: 20px;
+  z-index: 1030;
+  width: 220px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.tasa-medalla:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
+}
+
+.tasa-medalla .medalla-header {
+  background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+  padding: 12px 15px;
+  color: #212529;
+  font-weight: 600;
+}
+
+.tasa-medalla .medalla-body {
+  padding: 15px;
+}
+
+.tasa-medalla .tasa-valor {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #198754;
+  line-height: 1.2;
+}
+
+.tasa-medalla .tasa-variacion {
+  font-size: 0.85rem;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tasa-medalla .tasa-fecha {
+  font-size: 0.75rem;
+  opacity: 0.8;
+}
+
+.tasa-medalla .btn-actualizar {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .tasa-medalla {
+    position: static;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto 1.5rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* Animación de actualización */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.tasa-actualizando {
+  animation: pulse 1.5s infinite;
+}

@@ -1,0 +1,18 @@
+/* Admin Layout Styles */
+.admin-layout .sidebar {
+  height: calc(100vh - 56px);
+  position: sticky;
+  top: 56px;
+  overflow-y: auto;
+}
+
+.admin-layout .offcanvas-body .nav-link {
+  border-left: 3px solid transparent;
+  transition: all 0.2s;
+}
+
+.admin-layout .offcanvas-body .nav-link.router-link-active {
+  background-color: #f8f9fa;
+  border-left-color: #ffc107;
+  color: #212529;
+}
