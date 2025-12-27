@@ -32,9 +32,9 @@
               </router-link>
             </li>
           </ul>
-          <button class="btn btn-outline-warning ms-3">
-            <i class="bi bi-basket"></i> Menu
-          </button>
+          <a href="#productos" class=" btn btn-outline-warning "><i class="bi bi-basket"></i> Menu</a>
+            
+
         </div>
       </div>
     </nav>

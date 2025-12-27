@@ -90,67 +90,64 @@
 </template>
 
 <script setup>
-import { defineProps, computed } from 'vue'
+import { defineProps, computed, ref, onMounted } from 'vue'
 import ItemCard from './ItemCard.vue'
+import { tasaService } from '../../api/dolarApi.js'
 
 const props = defineProps({
-  combos: {
-    type: Array,
-    default: () => []
-  },
-  loading: {
-    type: Boolean,
-    default: false
-  },
-  error: {
-    type: String,
-    default: null
+  combos: { type: Array, default: () => [] },
+  loading: { type: Boolean, default: false },
+  error: { type: String, default: null }
+})
+
+const tasaUSD = ref(1)
+
+onMounted(async () => {
+  try {
+    const data = await tasaService.getTasaActual()
+    tasaUSD.value = data.tasaUSD
+  } catch (err) {
+    console.error("Error al cargar la tasa:", err)
   }
 })
 
-// Procesar los combos para crear items del menú
 const itemsMenu = computed(() => {
-  if (!Array.isArray(props.combos) || props.combos.length === 0) {
-    return []
-  }
+  if (!Array.isArray(props.combos) || props.combos.length === 0) return []
   
   const itemsMap = new Map()
   
   props.combos.forEach(combo => {
     const tipoCombo = combo.tipo_combo?.nombre || 'Especial'
-    
-    // Si es "Variado" o tiene múltiples sabores diferentes
-    if (tipoCombo.toLowerCase().includes('variado') || 
-        tipoCombo.toLowerCase().includes('mixto') ||
-        (combo.sabores_info && combo.sabores_info.length > 1)) {
-      
-      // Crear item "Variado" como una opción única
+    const esVariado = tipoCombo.toLowerCase().includes('variado') || 
+                      tipoCombo.toLowerCase().includes('mixto') ||
+                      (combo.sabores_info && combo.sabores_info.length > 1)
+
+    if (esVariado) {
       const variadoId = `variado-${combo.id_combo}`
-      
       if (!itemsMap.has(variadoId)) {
         itemsMap.set(variadoId, {
           id: variadoId,
-          tipo: 'variado',
+          tipo: 'variado', // Recuperado para el Badge verde
           nombre: 'Combo Variado',
-          descripcion: 'Mezcla de sabores seleccionados',
+          descripcion: 'Mezcla de sabores seleccionados', // Recuperado
           precio: combo.precio,
+          tasa: tasaUSD.value, // Nueva integración
           cantidad_empanadas: combo.cantidad_empanadas,
           imagen: '/images/sabores/default.jpg',
-          sabores: combo.sabores_info || []
+          sabores: combo.sabores_info || [] // Recuperado para los mini-badges
         })
       }
     } 
-    // Si es combo de un solo sabor
     else if (combo.sabores_info && combo.sabores_info.length === 1) {
       const sabor = combo.sabores_info[0]
-      
       if (sabor.id_sabor && !itemsMap.has(sabor.id_sabor)) {
         itemsMap.set(sabor.id_sabor, {
           id: sabor.id_sabor,
-          tipo: 'sabor',
+          tipo: 'sabor', // Recuperado para el Badge amarillo
           nombre: sabor.nombre,
-          descripcion: `Combo de ${sabor.nombre}`,
+          descripcion: `Combo de ${sabor.nombre}`, // Recuperado
           precio: combo.precio,
+          tasa: tasaUSD.value, // Nueva integración
           cantidad_empanadas: combo.cantidad_empanadas,
           imagen: sabor.imagen,
           sabores: [sabor]
@@ -164,17 +161,12 @@ const itemsMenu = computed(() => {
 
 // Agrupar items en slides de 3 para carrusel
 const itemsAgrupados = computed(() => {
-  if (itemsMenu.value.length === 0) {
-    return []
-  }
-  
+  if (itemsMenu.value.length === 0) return []
   const grupos = []
   const itemsPorSlide = 3
-  
   for (let i = 0; i < itemsMenu.value.length; i += itemsPorSlide) {
     grupos.push(itemsMenu.value.slice(i, i + itemsPorSlide))
   }
-  
   return grupos
 })
 </script>
