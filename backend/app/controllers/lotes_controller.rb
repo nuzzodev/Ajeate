@@ -45,20 +45,29 @@ class LotesController < ApplicationController
     head :no_content
   end
 
-  # POST /lotes/:id/agregar_sabor
-  def agregar_sabor
-    @lote = Lote.find(params[:id])
-    sabor_id = params[:sabor_id]
-    
-    # Crear relación sabor_lote
-    sabor_lote = @lote.sabor_lotes.new(sabor_fk: sabor_id)
-    
-    if sabor_lote.save
-      render json: { message: 'Sabor agregado al lote' }, status: :created
-    else
-      render json: sabor_lote.errors, status: :unprocessable_entity
-    end
+def agregar_sabor
+  @lote = Lote.find(params[:id])
+  
+  # 1. Obtener el ID del sabor desde el JSON
+  sabor_id = params[:sabor_id]
+  
+  # 2. Generar el nuevo ID para la tabla intermedia (Manual)
+  last_id = SaborLote.maximum(:id_sabor_lote) || 0
+  nuevo_id = last_id + 1
+  
+  # 3. Crear la instancia asignando los valores manualmente
+  @sabor_lote = SaborLote.new(
+    id_sabor_lote: nuevo_id,
+    lote_fk: @lote.id_lote,
+    sabor_fk: sabor_id
+  )
+  
+  if @sabor_lote.save
+    render json: { message: 'Sabor agregado al lote', data: @sabor_lote }, status: :created
+  else
+    render json: @sabor_lote.errors, status: :unprocessable_entity
   end
+end
 
   private
 

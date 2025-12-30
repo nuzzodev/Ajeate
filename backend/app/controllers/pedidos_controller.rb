@@ -52,6 +52,12 @@ class PedidosController < ApplicationController
   end
 
   def pedido_params
-    params.require(:pedido).permit(:id_pedido, :hora_entrega, :cliente_fk)
+    params.require(:pedido).permit(
+      :hora_entrega, :cliente_fk,
+      combos_attributes: [
+        :cantidad_empanadas, :tipo_combo_fk, :precio,
+        combo_detalles_attributes: [:bandeja_fk, :cantidad_por_sabor]
+      ]
+    )
   end
 end

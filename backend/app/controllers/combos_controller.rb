@@ -3,37 +3,26 @@ class CombosController < ApplicationController
   before_action :set_combo, only: [:show, :update, :destroy]
 
   # GET /combos
-  # GET /combos?por_sabor=1
-  # GET /combos?por_sabor=Pollo
+
   def index
     @combos = Combo.all
     
-    # Filtrar por pedido si viene el parámetro
-    if params[:pedido_id]
-      @combos = @combos.where(pedido_fk: params[:pedido_id])
-    end
-    
-    # Filtrar por sabor si viene el parámetro por_sabor
-    if params[:por_sabor].present?
-      @combos = filtrar_por_sabor(@combos, params[:por_sabor])
-    end
-    
-    # Incluir relaciones
     @combos = @combos.includes(:tipo_combo, :combo_detalles)
     
     render json: @combos, 
-           include: [:tipo_combo, :combo_detalles],
-           methods: [:sabores_info]
+          include: [:tipo_combo, :combo_detalles],
+          methods: [:sabores_info]
   end
 
   # GET /combos/:id
   def show
     render json: @combo, 
-           include: [:tipo_combo, :combo_detalles],
-           methods: [:sabores_info]
+          include: [:tipo_combo, :combo_detalles],
+          methods: [:sabores_info]
   end
 
   # POST /combos
+# app/controllers/combos_controller.rb
   def create
     @combo = Combo.new(combo_params)
     
@@ -43,10 +32,29 @@ class CombosController < ApplicationController
       @combo.id_combo = last_id + 1
     end
 
-    if @combo.save
-      render json: @combo, status: :created
-    else
-      render json: @combo.errors, status: :unprocessable_entity
+    # Iniciamos la transacción para asegurar consistencia
+    ActiveRecord::Base.transaction do
+      if @combo.save
+        # Iteramos sobre los detalles del combo recién creado para descontar de las bandejas
+        @combo.combo_detalles.each do |detalle|
+          bandeja = Bandeja.find(detalle.bandeja_fk)
+          
+          # Verificamos si hay suficiente stock (Opcional pero recomendado)
+          if bandeja.cantidad_disponible < detalle.cantidad_por_sabor
+            raise ActiveRecord::Rollback, "Stock insuficiente en la bandeja #{bandeja.id_bandeja}"
+          end
+
+          # Descontamos la cantidad
+          bandeja.update!(cantidad_disponible: bandeja.cantidad_disponible - detalle.cantidad_por_sabor)
+        end
+
+        render json: @combo, status: :created
+      else
+        render json: @combo.errors, status: :unprocessable_entity
+      end
+    rescue ActiveRecord::Rollback => e
+      # Si hubo un rollback manual (por stock), enviamos el error
+      render json: { error: e.message }, status: :unprocessable_entity
     end
   end
 
@@ -68,8 +76,7 @@ class CombosController < ApplicationController
   # GET /combos/por_sabor/:sabor_id
   def por_sabor
     sabor_id = params[:sabor_id]
-    @combos = Combo.por_sabor_id(sabor_id)
-                   .includes(:tipo_combo, :combo_detalles)
+    @combos = Combo.por_sabor_id(sabor_id).includes(:tipo_combo, :combo_detalles)
     
     render json: {
       sabor_id: sabor_id,
@@ -78,42 +85,7 @@ class CombosController < ApplicationController
     }
   end
   
-  # GET /combos/con_sabor/:nombre
-  def por_nombre_sabor
-    nombre = params[:nombre]
-    @combos = Combo.por_nombre_sabor(nombre)
-                   .includes(:tipo_combo, :combo_detalles)
-    
-    render json: {
-      sabor_buscado: nombre,
-      combos: @combos,
-      total: @combos.count
-    }
-  end
   
-  # GET /combos/buscar
-  def buscar
-    @combos = Combo.all
-    
-    # Solo filtro por sabor por ahora
-    if params[:sabor].present?
-      sabor_param = params[:sabor]
-      if sabor_param.to_s.match?(/^\d+$/)
-        @combos = @combos.por_sabor_id(sabor_param.to_i)
-      else
-        @combos = @combos.por_nombre_sabor(sabor_param)
-      end
-    end
-    
-    # Filtros adicionales simples
-    @combos = @combos.where(tipo_combo_fk: params[:tipo_combo]) if params[:tipo_combo].present?
-    @combos = @combos.where(pedido_fk: params[:pedido]) if params[:pedido].present?
-    
-    render json: {
-      combos: @combos,
-      total: @combos.count
-    }
-  end
 
   private
 
@@ -126,17 +98,4 @@ class CombosController < ApplicationController
   )
   end
   
-  def filtrar_por_sabor(combos, sabor_param)
-    # Si es un array de IDs [1, 2, 3]
-    if sabor_param.is_a?(Array)
-      combos.por_sabores(sabor_param.map(&:to_i))
-    # Si es string con IDs separados por comas "1,2,3"
-    elsif sabor_param.to_s.match?(/^\d+(,\d+)*$/)
-      ids = sabor_param.split(',').map(&:to_i)
-      combos.por_sabores(ids)
-    # Si es texto (nombre)
-    else
-      combos.por_nombre_sabor(sabor_param)
-    end
-  end
 end

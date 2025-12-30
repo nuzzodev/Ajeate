@@ -74,6 +74,6 @@ class SaboresController < ApplicationController
   end
 
   def sabor_params
-    params.require(:sabor).permit(:id_sabor, :nombre)
+    params.require(:sabor).permit(:id_sabor, :nombre,:imagen_url)
   end
 end

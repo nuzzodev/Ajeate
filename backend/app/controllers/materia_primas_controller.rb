@@ -47,7 +47,7 @@ class MateriaPrimasController < ApplicationController
 
   # GET /materia_primas/inventario/bajo
   def inventario_bajo
-    @materia_primas = MateriaPrima.where('cantidad < ?', 50) # Ajusta el límite según necesites
+    @materia_primas = MateriaPrima.where('cantidad < ?', 20) # Ajusta el límite según necesites
     render json: @materia_primas
   end
 
@@ -58,6 +58,6 @@ class MateriaPrimasController < ApplicationController
   end
 
   def materia_prima_params
-    params.require(:materia_prima).permit(:id_materia_prima, :nombre, :cantidad, :marca)
+    params.require(:materia_prima).permit(:id_materia_prima, :nombre, :cantidad, :marca,sabor_materias_attributes: [:sabor_fk])
   end
 end

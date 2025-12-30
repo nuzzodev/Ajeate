@@ -11,30 +11,39 @@ Rails.application.routes.draw do
   
   resources :combos do
     collection do
-      # Endpoints para filtrar combos por sabores
       get 'por_sabor/:sabor_id', action: :por_sabor
-      get 'buscar', action: :buscar  # Para búsquedas avanzadas
-      get 'con_sabor/:nombre', action: :por_nombre_sabor
     end
   end
   
   resources :bandejas do
     collection do
-      get 'stock/bajo'
+      get 'stock/bajo', to: 'bandejas#stock_bajo'
     end
   end
   
-  resources :sabores
+  resources :sabores do
+    member do
+      get :materias_primas
+      post :agregar_materia_prima
+    end
+  end
   
   resources :tipo_combos do
     get 'combos', on: :member
+    member do 
+      get 'tipo_combos/:id/combos',to: 'tipo_combos#combos'
+    end
   end
   
-  resources :lotes
+  resources :lotes do
+    member do
+      post :agregar_sabor
+    end
+  end
   
   resources :materia_primas do
     collection do
-      get 'inventario/bajo'
+      get 'inventario/bajo',to: 'materia_primas#inventario_bajo'
     end
   end
   

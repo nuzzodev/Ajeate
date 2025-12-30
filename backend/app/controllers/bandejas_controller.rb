@@ -47,7 +47,7 @@ class BandejasController < ApplicationController
 
   # GET /bandejas/stock/bajo
   def stock_bajo
-    @bandejas = Bandeja.where('cantidad_disponible < ?', 10).includes(:sabor)
+    @bandejas = Bandeja.where('cantidad_disponible < ?', 50).includes(:sabor)
     render json: @bandejas, include: [:sabor]
   end
 

@@ -2,10 +2,14 @@
 class Sabor < ApplicationRecord
   self.table_name = 'sabor'  # IMPORTANTE: tabla singular
   self.primary_key = 'id_sabor'
-  
+  has_many :sabor_materias, foreign_key: 'sabor_fk', primary_key: 'id_sabor'
+  has_many :sabor_lotes, foreign_key: 'sabor_fk', primary_key: 'id_sabor'
+
   has_many :bandejas, foreign_key: 'sabor_fk', primary_key: 'id_sabor'
   has_many :combo_detalles, through: :bandejas
   has_many :combos, through: :combo_detalles
+  accepts_nested_attributes_for :sabor_materias
+
 
   def imagen_local
     # Nombre del archivo basado en el nombre del sabor
