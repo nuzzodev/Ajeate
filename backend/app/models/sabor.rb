@@ -12,7 +12,6 @@ class Sabor < ApplicationRecord
 
 
   def imagen_local
-    # Nombre del archivo basado en el nombre del sabor
     nombre_archivo = "#{nombre.downcase.gsub(' ', '_').gsub('ñ', 'n')}.jpg"
     
     # Verificar si existe el archivo
