@@ -9,14 +9,20 @@ class PedidosController < ApplicationController
   end
 
   def show
-  render json: @pedido, include: [
-    :cliente, 
-    combos: { 
-      include: { 
-        combo_detalles: { include: :bandeja } 
-      } 
+    render json: @pedido, include: {
+      cliente: {},
+      combos: {
+        include: {
+          combo_detalles: {
+            include: {
+              bandeja: {
+                include: :sabor # <--- ESTO ES LO QUE FALTA
+              }
+            }
+          }
+        }
+      }
     }
-  ]
   end
 
   # POST /pedidos
