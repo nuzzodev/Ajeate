@@ -1,0 +1,1515 @@
+{
+  "info": {
+    "_postman_id": "ef994e9c-a710-4844-b0e4-e69c3fadf20d",
+    "name": "Ajeate",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Sabores",
+      "item": [
+        {
+          "name": "Get Sabores",
+          "id": "4674c8c7-5154-444e-898a-e1843c8da7be",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/sabores",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "sabores"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Sabores by ID",
+          "id": "1c62dde2-a859-48c8-a377-deb58f552f92",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/sabores/:id",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "sabores",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "3"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get materias primas que tiene un Sabor",
+          "id": "7c04d9b6-a869-41d6-b08c-05cdb5d22a0d",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/sabores/:id/materias_primas",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "sabores",
+                ":id",
+                "materias_primas"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "3"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get imagenes",
+          "id": "157d6364-0bcc-4f88-9bbd-eeac34bc721f",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/images/sabores/default.jpg",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "images",
+                "sabores",
+                "default.jpg"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Post Sabores",
+          "id": "babb8cd7-5c6f-49f6-909e-2c189cf0071d",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"sabor\": {\r\n    \"nombre\": \"Cochino\",\r\n    \"cantidad\": 10,\r\n    \"sabor_materias_attributes\": [\r\n      {\r\n        \"materia_prima_fk\": 1,\r\n        \"cantidad_a_descontar\": 2.0\r\n      },\r\n      {\r\n        \"materia_prima_fk\": 2,\r\n        \"cantidad_a_descontar\": 0.5\r\n      }\r\n    ]\r\n  }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/sabores",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "sabores"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Anexar materia prima al sabor respectivo",
+          "id": "bacc782c-aaea-4fc0-b8fc-0c68456f827c",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"materia_prima_id\": 12\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/sabores/:id/agregar_materia_prima",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "sabores",
+                ":id",
+                "agregar_materia_prima"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "3"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Put Sabores",
+          "id": "ef6a1676-9f7e-4498-896e-933f69476ab7",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"sabor\": {\r\n    \"nombre\": \"Caraota Con queso\",\r\n    \"imagen_url\": \"/images/sabores/default.jpg\"\r\n  }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/sabores/:id",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "sabores",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "7"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Preparar Sabor",
+          "id": "aaad462f-8f46-468d-bdac-cf76b4271c49",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"cantidad_final\": 5.0,\r\n  \"ingredientes\": [\r\n    {\r\n      \"materia_prima_id\": 1, \r\n      \"cantidad\": 4.0\r\n    },\r\n    {\r\n      \"materia_prima_id\": 3,\r\n      \"cantidad\": 2.0\r\n    }\r\n  ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/sabores/:id/preparar_sabor",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "sabores",
+                ":id",
+                "preparar_sabor"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "3"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Sabores",
+          "id": "56d22ee4-a0f0-414a-8fc4-a5827193a666",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/sabores/:id",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "sabores",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "7"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "800f3628-cb25-4510-a5fd-406426c64ea9"
+    },
+    {
+      "name": "Combos",
+      "item": [
+        {
+          "name": "Get Combos",
+          "id": "5b204ec5-1453-4fdf-a4f2-6cd0ff8c8c87",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/combos",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "combos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Combos By ID",
+          "id": "d9806d4d-c5f8-44dc-b260-487179153d86",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/combos/:id",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "combos",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "29"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener todos los combos de un solo Sabor",
+          "id": "d21220e8-fd3d-4902-97a4-090a13fab408",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/combos/por_sabor/:sabor_id",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "combos",
+                "por_sabor",
+                ":sabor_id"
+              ],
+              "variable": [
+                {
+                  "key": "sabor_id",
+                  "value": "4"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Post Combos",
+          "id": "2a6dba98-9f43-4bf5-886f-7931bcc57cb6",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"combo\": {\r\n    \"cantidad_empanadas\": 10,\r\n    \"tipo_combo_fk\": 1,\r\n    \"pedido_fk\": 2,\r\n    \"combo_detalles_attributes\": [\r\n      {\r\n        \"cantidad_por_sabor\": 2,\r\n        \"bandeja_fk\": 4\r\n      },\r\n      {\r\n        \"cantidad_por_sabor\": 2,\r\n        \"bandeja_fk\": 3\r\n      },{\r\n        \"cantidad_por_sabor\": 6,\r\n        \"bandeja_fk\": 2\r\n      }\r\n      \r\n    ]\r\n  }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/combos",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "combos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Put Combos",
+          "id": "306556a8-2c58-4108-acee-a8a3b3ae347d",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"combo\": {\r\n    \"cantidad_empanadas\": 10,\r\n    \"tipo_combo_fk\": 1,\r\n    \"pedido_fk\": 3,\r\n    \"precio\": 1.2,\r\n    \"combo_detalles_attributes\": [\r\n      {\r\n        \"id_combo_detalle\": 5,\r\n        \"cantidad_por_sabor\": 10,\r\n        \"bandeja_fk\": 8\r\n      }\r\n    ]\r\n  }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/combos/:id",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "combos",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "3"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Combo",
+          "id": "b056cced-3bb9-48db-9105-da064f94621f",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "http://localhost:3000/combos/:id",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "combos",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "7f853725-f5d9-4032-95d6-10dbbd02d8f1"
+    },
+    {
+      "name": "Bandejas",
+      "item": [
+        {
+          "name": "Get Bandejas",
+          "id": "53674e40-c684-40c9-9f58-42685792d180",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/bandejas",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "bandejas"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Bandejas By Id",
+          "id": "399cde3c-8ec1-43a2-a80e-4d2c278bb5c0",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/bandejas/:id",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "bandejas",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "3"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Bandeja",
+          "id": "c4e9ffc2-6028-4da0-a2f6-2dc5a8f2f191",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/bandejas/:id",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "bandejas",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "6"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Post Bandejas",
+          "id": "3bad7db4-2e54-425b-b33e-0af7fbd0ffb7",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n        \"fecha_produccion\": \"2024-12-27\",\r\n        \"cantidad_disponible\": 200,\r\n        \"sabor_fk\": 4\r\n        \r\n    }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/bandejas",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "bandejas"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Put Bandeja",
+          "id": "f36994aa-15ea-4500-be8b-4dfeb31acf13",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n        \"fecha_produccion\": \"2024-12-27\",\r\n        \"cantidad_disponible\": 20,\r\n        \"sabor_fk\": 4\r\n        \r\n    }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/bandejas/:id",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "bandejas",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Bandejas de Bajo Stock",
+          "id": "5a26c2e0-9993-4574-ba95-1ced81e15b96",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "http://localhost:3000/bandejas/stock/bajo",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "bandejas",
+                "stock",
+                "bajo"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Llenar Bandejas",
+          "id": "8063d7f0-0dfd-413c-bc50-d63ee46d1bad",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"cantidad_sabor_gastada\": 10.0,\r\n  \"unidades_producidas\": 200\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/bandejas/:id/llenar_bandeja",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "bandejas",
+                ":id",
+                "llenar_bandeja"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "3"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "1148c8a7-a474-4cc0-bb9a-2a6e4aafe5b1"
+    },
+    {
+      "name": "Clientes",
+      "item": [
+        {
+          "name": "Get Cliente",
+          "id": "c9214fd9-cfe4-4d54-92fd-91aa18f06804",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/clientes",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "clientes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Pedidos by ID Cliente",
+          "id": "626ed5b4-0638-4efc-b02f-91707fbb8b0a",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/clientes/31400974/pedidos",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "clientes",
+                "31400974",
+                "pedidos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Cliente by Id",
+          "id": "b1faf83a-c41d-4bc4-99f6-45cc93ee0ad1",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/clientes/11284739",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "clientes",
+                "11284739"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Post Cliente",
+          "id": "4cab1366-8182-4f04-9b0c-c600fbf0054f",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"id_cliente\": \"11284739\",\r\n    \"nombre\": \"Gloria\",\r\n    \"apellido\": \"Navarro\",\r\n    \"telefono\": \"0414-1573706\",\r\n    \"direccion\": \"Urb El Obelisco\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/clientes",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "clientes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Cliente",
+          "id": "91f2c57a-b2ce-4b9a-acf1-2a23f483b5a6",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/clientes/11284739",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "clientes",
+                "11284739"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Put Cliente",
+          "id": "e9b6f154-259d-4814-86f7-0b255ba72851",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"id_cliente\": \"11284739\",\r\n    \"nombre\": \"Gloria\",\r\n    \"apellido\": \"Navarro\",\r\n    \"telefono\": \"0414-1573706\",\r\n    \"direccion\": \"Urb El Parral\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/clientes/11284739",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "clientes",
+                "11284739"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "b706579b-e665-44ae-9fc9-6a5dbcf1abd5"
+    },
+    {
+      "name": "Materia_Primas",
+      "item": [
+        {
+          "name": "Get Materias Prima",
+          "id": "fb6a5a51-b0e8-4bca-bfac-2916ccff302a",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "http://localhost:3000/materia_primas",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "materia_primas"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Materias Primas by ID",
+          "id": "832dfdf0-a967-4950-9066-5e3060c6122f",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/materia_primas/:id",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "materia_primas",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "3"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Materia Primas",
+          "id": "7a37403b-9cec-4087-a3a6-a78496c350ba",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/materia_primas/7",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "materia_primas",
+                "7"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Post Materias Primas",
+          "id": "bd800eab-baab-4df5-bc8e-c87e099fa7a5",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"materia_prima\": {\r\n    \"nombre\": \"Cochino\",\r\n    \"marca\": \"Generica\",\r\n    \"cantidad\": 5\r\n  }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/materia_primas",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "materia_primas"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Put Materias Primas",
+          "id": "914a2ff1-fe19-48b0-97c7-b98aa8970fd2",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nombre\": \"Carne Molida\",\r\n    \"cantidad\": 10.0,\r\n    \"marca\": \"Generica\",\r\n    \"sabor_materias\": [\r\n        {\r\n            \"id_sabor_materia\": 13,\r\n            \"sabor_fk\": 5,\r\n            \"materia_prima_fk\": 13\r\n        }\r\n    ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/materia_primas/13",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "materia_primas",
+                "13"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "3f67ba9c-cd76-4c18-8fc3-fa0b30243ca4"
+    },
+    {
+      "name": "Lotes",
+      "item": [
+        {
+          "name": "Get Lotes",
+          "id": "40523c49-c0d9-4f8e-a49c-bf21cdb1ad24",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/lotes",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "lotes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Lote by ID",
+          "id": "f59210b0-f43c-48f7-ad9f-623e5b36d47f",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/lotes/:id",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "lotes",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Put Lote",
+          "id": "8bb0acfc-c206-40bc-9049-d64efbc46c91",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"lote\": {\r\n    \"cantidad_lote\": 50,\r\n    \"sabor_lotes_attributes\": [\r\n      {\r\n        \"sabor_fk\": 2\r\n      }\r\n    ]\r\n  }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/lotes/2",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "lotes",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Post Lote",
+          "id": "f7f14dd2-c336-433e-bc18-875ccf013659",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"lote\": {\r\n    \"cantidad_lote\": 50,\r\n    \"sabor_lotes_attributes\": [\r\n      { \"sabor_fk\": 1 },\r\n      { \"sabor_fk\": 3 }\r\n    ]\r\n  }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/lotes",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "lotes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Anexar Sabor a lote",
+          "id": "eed17f5b-6b5d-4935-af6c-f3cc10f93479",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"sabor_id\": 3\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/lotes/:id/agregar_sabor",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "lotes",
+                ":id",
+                "agregar_sabor"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "3"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Lote",
+          "id": "5d10e08f-b00e-49b6-b604-e12883b91554",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/lotes/:id",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "lotes",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "5"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "c966111a-1ecf-4b87-ba44-e2e7b7051810"
+    },
+    {
+      "name": "Tipo Combos",
+      "item": [
+        {
+          "name": "Get Tipo Combos",
+          "id": "943934cd-74bc-4a73-9f7e-342960040b2b",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/tipo_combos",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "tipo_combos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Tipo Combos By Id",
+          "id": "56b558b1-5d6b-412f-a2e2-d454a6946d98",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/tipo_combos/:id",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "tipo_combos",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Tipo Combos",
+          "id": "38484287-3e7e-49bc-bed4-7d1206740cf4",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/tipo_combos/:id",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "tipo_combos",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "3"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Put Tipo Combos",
+          "id": "0a989ee3-2244-4328-aea8-37b8191a0f22",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nombre\": \"Crudo\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/tipo_combos/:id",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "tipo_combos",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "3"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Post Tipo Combos",
+          "id": "2a1a5084-2367-4517-851b-9fdc12377c79",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n        \"nombre\": \"Crudo\"\r\n    }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/tipo_combos/",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "tipo_combos",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener todos los Combos según tipo",
+          "id": "cd7eac68-2896-4c48-a256-49c942a6ad9b",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/tipo_combos/:id/combos",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "tipo_combos",
+                ":id",
+                "combos"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "8854e20d-9675-4642-8287-f50171dda7d1"
+    },
+    {
+      "name": "Pedidos",
+      "item": [
+        {
+          "name": "Get Pedidos",
+          "id": "6a842e48-abca-4e50-b88f-4752b610b10c",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/pedidos",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "pedidos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Pedidos By Id",
+          "id": "4081093a-1c3b-4187-93c2-3919023b9af9",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/pedidos/:id",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "pedidos",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "11"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Post Pedidos",
+          "id": "fa7567e5-cfce-4f8c-81c0-9bdec42dfc7d",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"pedido\": {\r\n    \"hora_entrega\": \"2025-12-29T14:30:00.000Z\",\r\n    \"cliente_fk\": \"31400974\",\r\n    \"combos_attributes\": [\r\n      {\r\n        \"cantidad_empanadas\": 12,\r\n        \"tipo_combo_fk\": 1,\r\n        \"precio\": 14.50,\r\n        \"combo_detalles_attributes\": [\r\n          {\r\n            \"bandeja_fk\": 1,\r\n            \"cantidad_por_sabor\": 6\r\n          },\r\n          {\r\n            \"bandeja_fk\": 2,\r\n            \"cantidad_por_sabor\": 6\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"cantidad_empanadas\": 8,\r\n        \"tipo_combo_fk\": 2,\r\n        \"precio\": 9.50,\r\n        \"combo_detalles_attributes\": [\r\n          {\r\n            \"bandeja_fk\": 3,\r\n            \"cantidad_por_sabor\": 4\r\n          },\r\n          {\r\n            \"bandeja_fk\": 4,\r\n            \"cantidad_por_sabor\": 4\r\n          }\r\n        ]\r\n      }\r\n    ]\r\n  }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/pedidos",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "pedidos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Put Pedidos",
+          "id": "1c9e4c70-99d4-4178-943a-5c6b4ac5de39",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"pedido\": {\r\n    \"hora_entrega\": \"2025-12-29T14:30:00.000Z\",\r\n    \"cliente_fk\": \"31400974\",\r\n    \"combos_attributes\": [\r\n      {\r\n        \"cantidad_empanadas\": 10,\r\n        \"tipo_combo_fk\": 2,\r\n        \"precio\": 15.5,\r\n        \"combo_detalles_attributes\": [\r\n          {\r\n            \"bandeja_fk\": 1,\r\n            \"cantidad_por_sabor\": 6\r\n          },\r\n          {\r\n            \"bandeja_fk\": 2,\r\n            \"cantidad_por_sabor\": 6\r\n          }\r\n        ]\r\n      }\r\n    ]\r\n  }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/pedidos/:id",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "pedidos",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "8"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Pedido",
+          "id": "89fe8661-c525-4c5b-a7f1-c193f4a4cad6",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/pedidos/:id",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "pedidos",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "7"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "787e8a2f-61c3-4be6-9d9e-cef8c36024c7"
+    },
+    {
+      "name": "Heatlh",
+      "id": "d032f4b0-12ad-4c77-a56b-4a81f0ed3d31",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/health",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "health"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

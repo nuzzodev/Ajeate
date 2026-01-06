@@ -51,6 +51,47 @@ class BandejasController < ApplicationController
     render json: @bandejas, include: [:sabor]
   end
 
+  # PUT /bandejas/:id/llenar_bandeja
+  def llenar_bandeja
+    @bandeja = Bandeja.find(params[:id])
+    sabor = @bandeja.sabor 
+    
+
+    cantidad_sabor_usada = params[:cantidad_sabor_gastada].to_f
+    
+    unidades_producidas = params[:unidades_producidas].to_i
+
+    if sabor.nil?
+      return render json: { error: "Esta bandeja no tiene un sabor asociado." }, status: :unprocessable_entity
+    end
+
+    if cantidad_sabor_usada <= 0 || unidades_producidas <= 0
+      return render json: { error: "Las cantidades deben ser mayores a cero." }, status: :bad_request
+    end
+
+    begin
+      ActiveRecord::Base.transaction do
+        if (sabor.cantidad || 0) < cantidad_sabor_usada
+          raise "Stock insuficiente del sabor #{sabor.nombre}. Disponible: #{sabor.cantidad}"
+        end
+
+        sabor.update!(cantidad: sabor.cantidad - cantidad_sabor_usada)
+
+        nuevo_stock_bandeja = (@bandeja.cantidad_disponible || 0) + unidades_producidas
+        @bandeja.update!(cantidad_disponible: nuevo_stock_bandeja)
+      end
+
+      render json: {
+        message: "Bandejas llenadas exitosamente",
+        sabor_restante: sabor.cantidad,
+        stock_bandeja_actual: @bandeja.cantidad_disponible
+      }, status: :ok
+
+    rescue => e
+      render json: { error: e.message }, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def set_bandeja

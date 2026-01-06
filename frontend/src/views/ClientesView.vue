@@ -1,13 +1,23 @@
 <template>
-  <div class="container mt-4">
-    <h1 class="mb-4">Clientes</h1>
-    <ClientesCrud />
+  <div class="container-fluid px-lg-5 mt-4">
+    <SectionHeader 
+      title="Clientes" 
+      subtitle="Gestión de Directorio" 
+      buttonText="Nuevo Cliente"
+      @primary-action="triggerCreate"
+    />
+    <ClientesCrud ref="clientesCrudRef" />
   </div>
 </template>
 
-<script>
-import ClientesCrud from '../components/crud/ClientesCrud.vue'
-export default {
-  components: { ClientesCrud }
-}
+<script setup>
+import { ref } from 'vue';
+import SectionHeader from '../components/layout/SectionHeader.vue';
+import ClientesCrud from '../components/crud/ClientesCrud.vue';
+
+const clientesCrudRef = ref(null);
+
+const triggerCreate = () => {
+  clientesCrudRef.value?.openCreateModal();
+};
 </script>

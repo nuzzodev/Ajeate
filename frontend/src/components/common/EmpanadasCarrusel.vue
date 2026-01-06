@@ -1,3 +1,4 @@
+<!-- MenuCarousel.vue -->
 <template>
   <div>
     <!-- Estado de carga -->
@@ -15,7 +16,7 @@
     </div>
 
     <!-- Verificar si hay datos -->
-    <div v-else-if="!combos || combos.length === 0" class="text-center py-5">
+    <div v-else-if="!itemsMenu || itemsMenu.length === 0" class="text-center py-5">
       <div class="alert alert-info">
         <i class="bi bi-info-circle me-2"></i>
         No hay combos disponibles.
@@ -90,9 +91,9 @@
 </template>
 
 <script setup>
-import { defineProps, computed, ref, onMounted } from 'vue'
+import { defineProps } from 'vue'
 import ItemCard from './ItemCard.vue'
-import { tasaService } from '../../api/dolarApi.js'
+import { useMenuLogic } from '../composables/useMenuComposables.js'
 
 const props = defineProps({
   combos: { type: Array, default: () => [] },
@@ -100,75 +101,8 @@ const props = defineProps({
   error: { type: String, default: null }
 })
 
-const tasaUSD = ref(1)
-
-onMounted(async () => {
-  try {
-    const data = await tasaService.getTasaActual()
-    tasaUSD.value = data.tasaUSD
-  } catch (err) {
-    console.error("Error al cargar la tasa:", err)
-  }
-})
-
-const itemsMenu = computed(() => {
-  if (!Array.isArray(props.combos) || props.combos.length === 0) return []
-  
-  const cartas = []
-  const saboresVistos = new Set()
-
-  props.combos.forEach(combo => {
-    if (combo.sabores_info && combo.sabores_info.length === 1) {
-      const sabor = combo.sabores_info[0]
-      
-      if (!saboresVistos.has(sabor.id_sabor)) {
-        cartas.push({
-          id: `sabor-${sabor.id_sabor}`,
-          tipo: 'sabor',
-          nombre: sabor.nombre,
-          descripcion: `Combo tradicional de ${sabor.nombre}`,
-          precio: combo.precio || 0, 
-          tasa: tasaUSD.value,
-          cantidad_empanadas: combo.cantidad_empanadas,
-          imagen: sabor.imagen || '/images/sabores/default.jpg',
-          sabores: [sabor]
-        })
-        saboresVistos.add(sabor.id_sabor)
-      }
-    }
-  })
-
-  const comboVariadoEjemplo = props.combos.find(c => 
-    (c.tipo_combo?.nombre || '').toLowerCase().includes('variado') || 
-    (c.sabores_info && c.sabores_info.length > 1)
-  )
-
-  if (comboVariadoEjemplo) {
-    cartas.push({
-      id: 'variado-unico',
-      tipo: 'variado',
-      nombre: 'Combo Variado',
-      descripcion: '¡Combina tus sabores favoritos!',
-      precio: comboVariadoEjemplo.precio || 0,
-      tasa: tasaUSD.value,
-      cantidad_empanadas: comboVariadoEjemplo.cantidad_empanadas,
-      imagen: '/images/sabores/variado.jpg', 
-      sabores: comboVariadoEjemplo.sabores_info
-    })
-  }
-
-  return cartas.sort((a, b) => a.nombre.localeCompare(b.nombre))
-})
-// Agrupar items en slides de 3 para carrusel
-const itemsAgrupados = computed(() => {
-  if (itemsMenu.value.length === 0) return []
-  const grupos = []
-  const itemsPorSlide = 3
-  for (let i = 0; i < itemsMenu.value.length; i += itemsPorSlide) {
-    grupos.push(itemsMenu.value.slice(i, i + itemsPorSlide))
-  }
-  return grupos
-})
+// Pasa todo el objeto props al composable
+const { itemsMenu, itemsAgrupados } = useMenuLogic(props)
 </script>
 
 <style scoped>

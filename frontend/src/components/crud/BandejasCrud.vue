@@ -1,114 +1,72 @@
 <template>
-  <div>
-    <DataTable
-      title="Gestión de Bandejas"
-      :columns="columns"
-      :data="bandejas"
-      primaryKey="id_bandeja"
-      @create="openCreateModal"
-      @edit="openEditModal"
-      @delete="confirmDelete"
-    />
+  <div class="bandejas-container">
+    <div v-if="isLoading" class="text-center p-5">
+      <div class="spinner-border text-warning" role="status"></div>
+    </div>
 
-    <ModalForm
+    <div v-else class="row g-4">
+      <div v-for="bandeja in bandejas" :key="bandeja.id_bandeja" class="col-12 col-md-6 col-lg-4">
+        <div class="ajeate-card border-0 shadow-sm rounded-4 bg-light overflow-hidden h-100">
+          <div class="position-relative">
+            <img 
+              :src="getImageUrl(bandeja.sabor?.imagen_url)" 
+              class="card-img-top" 
+              style="height: 180px; object-fit: cover;"
+              alt="SABOR IMAGEN"
+            >
+            <div class="badge-qty position-absolute top-0 end-0 m-3 bg-dark text-warning fw-bold p-2 px-3 rounded-pill shadow">
+              {{ bandeja.cantidad_disponible }} UNIDS
+            </div>
+          </div>
+
+          <div class="p-4 pt-3">
+            <div :class="['status-line mb-3', bandeja.cantidad_disponible > 50 ? 'bg-success' : 'bg-warning']"></div>
+            <h3 class="fw-bold text-dark h4 mb-0">{{ bandeja.sabor?.nombre }}</h3>
+            <div class="text-muted small mb-4">
+              <i class="bi bi-calendar3 me-1"></i> {{ formatDate(bandeja.fecha_produccion) }}
+            </div>
+
+            <div class="d-flex gap-2">
+              <button @click="openEditModal(bandeja)" class="btn btn-dark flex-grow-1 fw-bold rounded-pill shadow-sm">
+                <i class="bi bi-pencil-square me-2"></i>Editar
+              </button>
+              <button @click="confirmDelete(bandeja)" class="btn btn-outline-danger rounded-pill shadow-sm">
+                <i class="bi bi-trash3"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ModalForm 
       modalId="bandejaModal"
-      :title="editing ? 'Editar Bandeja' : 'Nuevo Bandeja'"
+      :title="editing ? 'Modificar Tanda' : 'Nueva Producción'"
       :editing="editing"
       @submit="saveBandeja"
     >
-      <div class="mb-3">
-        <label class="form-label">Fecha de Producción</label>
-        <input v-model="currentBandeja.fecha_produccion" type="date" class="form-control">
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Cantidad Disponible</label>
-        <input v-model="currentBandeja.cantidad_disponible" type="number" class="form-control" min="0">
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Sabor</label>
-        <select v-model="currentBandeja.sabor_fk" class="form-select">
-          <option value="">Seleccionar sabor</option>
+      <div class="mb-4">
+        <label class="form-label fw-bold small text-muted">SELECCIONAR SABOR</label>
+        <select v-model="currentBandeja.sabor_fk" class="form-select border-2 py-3" required>
+          <option value="" disabled>Elegir sabor...</option>
           <option v-for="sabor in sabores" :key="sabor.id_sabor" :value="sabor.id_sabor">
             {{ sabor.nombre }}
           </option>
         </select>
       </div>
-    </ModalForm>
+      </ModalForm>
   </div>
 </template>
 
-<script>
-import * as bootstrap from 'bootstrap'
-import DataTable from '../common/DataTable.vue'
-import ModalForm from '../common/ModalForm.vue'
+<script setup>
+import { useBandejas } from '../composables/useBandejas';
+import ModalForm from '@/components/common/ModalForm.vue';
 
-export default {
-  name: 'BandejasCrud',
-  components: { DataTable, ModalForm },
-  data() {
-    return {
-      columns: [
-        { key: 'id_bandeja', label: 'ID' },
-        { key: 'fecha_produccion', label: 'Fecha Producción' },
-        { key: 'cantidad_disponible', label: 'Cantidad' },
-        { key: 'sabor.nombre', label: 'Sabor' }
-      ],
-      bandejas: [
-        {
-          "id_bandeja": 4,
-          "fecha_produccion": "2024-12-14",
-          "cantidad_disponible": 180,
-          "sabor_fk": 1,
-          "sabor": {
-            "id_sabor": 1,
-            "nombre": "Queso"
-          }
-        }
-      ],
-      sabores: [
-        { "id_sabor": 1, "nombre": "Queso" },
-        { "id_sabor": 2, "nombre": "Carne" }
-      ],
-      currentBandeja: this.getEmptyBandeja(),
-      editing: false
-    }
-  },
-  methods: {
-    getEmptyBandeja() {
-      return {
-        id_bandeja: null,
-        fecha_produccion: '',
-        cantidad_disponible: 0,
-        sabor_fk: ''
-      }
-    },
-    openCreateModal() {
-      this.currentBandeja = this.getEmptyBandeja()
-      this.editing = false
-      new bootstrap.Modal(document.getElementById('bandejaModal')).show()
-    },
-    openEditModal(bandeja) {
-      this.currentBandeja = { ...bandeja }
-      this.editing = true
-      new bootstrap.Modal(document.getElementById('bandejaModal')).show()
-    },
-    saveBandeja() {
-      const sabor = this.sabores.find(s => s.id_sabor === this.currentBandeja.sabor_fk)
-      this.currentBandeja.sabor = sabor
-      
-      if (this.editing) {
-        const index = this.bandejas.findIndex(b => b.id_bandeja === this.currentBandeja.id_bandeja)
-        this.bandejas.splice(index, 1, this.currentBandeja)
-      } else {
-        this.currentBandeja.id_bandeja = this.bandejas.length + 1
-        this.bandejas.push(this.currentBandeja)
-      }
-    },
-    confirmDelete(bandeja) {
-      if (confirm(`¿Eliminar bandeja #${bandeja.id_bandeja}?`)) {
-        this.bandejas = this.bandejas.filter(b => b.id_bandeja !== bandeja.id_bandeja)
-      }
-    }
-  }
-}
+const { 
+  bandejas, sabores, currentBandeja, editing, isLoading,
+  formatDate, openCreateModal, openEditModal, saveBandeja, confirmDelete,getImageUrl 
+} = useBandejas();
+
+// Exponemos el método para el componente padre (si lo necesita)
+defineExpose({ openCreateModal });
 </script>

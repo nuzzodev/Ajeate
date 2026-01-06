@@ -1,6 +1,7 @@
 class SaborMateria < ApplicationRecord
   self.primary_key = 'id_sabor_materia'
   self.table_name = 'sabor_materia'
+  attr_accessor :cantidad_a_descontar
   
   # El inverse_of permite que el hijo "vea" al padre antes de que ambos tengan ID
   belongs_to :materia_prima, 

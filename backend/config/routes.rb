@@ -19,12 +19,16 @@ Rails.application.routes.draw do
     collection do
       get 'stock/bajo', to: 'bandejas#stock_bajo'
     end
+    member do
+    put :llenar_bandeja
+    end
   end
   
   resources :sabores do
     member do
       get :materias_primas
       post :agregar_materia_prima
+      put :preparar_sabor
     end
   end
   

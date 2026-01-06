@@ -80,6 +80,12 @@
                   <i class="bi bi-tray me-2"></i>Bandejas
                 </router-link>
               </li>
+              <li class="nav-item">
+              <router-link to="/admin/materias_primas" class="nav-link d-flex align-items-center"
+                          :class="{ 'active': $route.path.includes('/materias_primas') }">
+                <i class="bi bi-receipt me-2"></i>Materias Primas
+              </router-link>
+            </li>
             </ul>
             
             <hr class="my-4">
@@ -190,7 +196,8 @@ export default {
       '/admin/combos': 'Combos',
       '/admin/sabores': 'Sabores',
       '/admin/lotes': 'Lotes',
-      '/admin/bandejas': 'Bandejas'
+      '/admin/bandejas': 'Bandejas',
+      '/admin/materias_primas':'Materias_primas'
     }
     
     const currentPageTitle = computed(() => {

@@ -2,6 +2,9 @@ class Combo < ApplicationRecord
   self.table_name = 'combo'
   self.primary_key = 'id_combo'
   
+  # Añade esta línea para autoincrement
+  self.inheritance_column = nil
+  
   #DE UNO A UNO
   belongs_to :pedido, foreign_key: 'pedido_fk', primary_key: 'id_pedido', inverse_of: :combos
   belongs_to :tipo_combo, foreign_key: 'tipo_combo_fk', primary_key: 'id_tipocombo'

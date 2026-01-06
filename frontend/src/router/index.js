@@ -57,6 +57,11 @@ const router = createRouter({
           path: 'bandejas',
           name: 'admin-bandejas',
           component: () => import('../views/BandejasView.vue')
+        },
+        {
+          path: 'materias_primas',
+          name: 'admin-materiasPrimas',
+          component: () => import('../views/MateriasPrimasView.vue')
         }
       ]
     }

@@ -8,5 +8,5 @@ class Pedido < ApplicationRecord
   
   accepts_nested_attributes_for :combos
   
-  validates :combos, presence: true
+
 end

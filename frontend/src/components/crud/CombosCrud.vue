@@ -1,146 +1,138 @@
 <template>
-  <div>
-    <DataTable
-      title="Gestión de Combos"
-      :columns="columns"
-      :data="combos"
-      primaryKey="id_combo"
-      @create="openCreateModal"
-      @edit="openEditModal"
-      @delete="confirmDelete"
-    />
+  <div class="combos-section">
+    <DataTable :columns="columns" :data="combos" primaryKey="id_combo" :showEdit="false" :showDelete="false" :showDetail="true" @view="openDetailsModal" />
 
     <ModalForm
       modalId="comboModal"
-      :title="editing ? 'Editar Combo' : 'Nuevo Combo'"
+      :title="editing ? 'Editar Combo' : 'Gestión de Combos'"
       :editing="editing"
-      @submit="saveCombo"
+      @submit="saveMultipleCombos"
     >
-      <div class="mb-3">
-        <label class="form-label">Pedido</label>
-        <select v-model="currentCombo.pedido_fk" class="form-select">
-          <option value="">Seleccionar pedido</option>
-          <option v-for="pedido in pedidos" :key="pedido.id_pedido" :value="pedido.id_pedido">
-            Pedido #{{ pedido.id_pedido }} - {{ pedido.cliente.nombre }}
+      <div class="col-12 mb-4">
+        <label class="form-label fw-bold small text-muted text-uppercase">Asignar a Pedido Principal</label>
+        <select v-model="currentCombo.pedido_fk" class="form-select border-2 border-warning shadow-none">
+          <option value="" disabled>Seleccionar pedido...</option>
+          <option v-for="p in pedidos" :key="p.id_pedido" :value="p.id_pedido">
+            Pedido #{{ p.id_pedido }} - {{ p.cliente?.nombre }}
           </option>
         </select>
       </div>
-      <div class="mb-3">
-        <label class="form-label">Tipo de Combo</label>
-        <select v-model="currentCombo.tipo_combo_fk" class="form-select">
-          <option value="">Seleccionar tipo</option>
-          <option v-for="tipo in tiposCombo" :key="tipo.id_tipocombo" :value="tipo.id_tipocombo">
-            {{ tipo.nombre }}
-          </option>
-        </select>
+
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="fw-bold mb-0 text-muted">CONFIGURACIÓN DE COMBOS</h6>
+        <button type="button" @click="agregarComboALista" class="btn btn-sm btn-warning rounded-pill px-3 fw-bold">
+          <i class="bi bi-plus-circle me-1"></i> Añadir Combo
+        </button>
       </div>
-      <div class="mb-3">
-        <label class="form-label">Cantidad de Empanadas</label>
-        <input v-model="currentCombo.cantidad_empanadas" type="number" class="form-control" min="1">
+
+      <div class="accordion" id="accordionCombos">
+        <div v-for="(combo, index) in combosEnCreacion" :key="combo.uuid" class="accordion-item mb-3 border rounded-4 overflow-hidden shadow-sm">
+          <h2 class="accordion-header">
+            <button class="accordion-button fw-bold bg-light text-dark shadow-none" type="button" data-bs-toggle="collapse" :data-bs-target="'#collapse' + index">
+              <span class="badge bg-warning text-dark me-2">{{ index + 1 }}</span>
+              Combo - {{ combo.cantidad_empanadas }} Unds.
+              <span v-if="combosEnCreacion.length > 1" @click.stop="eliminarComboDeLista(index)" class="ms-auto text-danger px-2 border-0 bg-transparent">
+                <i class="bi bi-trash"></i>
+              </span>
+            </button>
+          </h2>
+          
+          <div :id="'collapse' + index" class="accordion-collapse collapse show" data-bs-parent="#accordionCombos">
+            <div class="accordion-body bg-white">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label small fw-bold text-muted text-uppercase">Categoría</label>
+                  <select v-model="combo.tipo_combo_fk" class="form-select border-2 shadow-none">
+                    <option value="" disabled>Seleccionar...</option>
+                    <option v-for="tipo in tiposCombo" :key="tipo.id_tipocombo" :value="tipo.id_tipocombo">{{ tipo.nombre }}</option>
+                  </select>
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label small fw-bold text-muted text-uppercase">Cantidad</label>
+                  <input v-model.number="combo.cantidad_empanadas" type="number" class="form-control border-2 shadow-none text-center fw-bold">
+                </div>
+
+                <div v-if="combo.tipo_combo_fk === 1" class="col-12 mt-3">
+                  <div class="p-2 bg-light rounded-3 border">
+                    <label class="fw-bold small text-muted d-block text-center mb-2">Selecciona Bandeja Única</label>
+                    <div class="row g-2">
+                      <div v-for="bandeja in bandejas" :key="bandeja.id_bandeja" class="col-6">
+                        <input 
+                          type="radio" 
+                          class="btn-check" 
+                          :name="'bandeja_' + combo.uuid" 
+                          :id="'b_' + combo.uuid + bandeja.id_bandeja" 
+                          :value="bandeja.id_bandeja"
+                          :checked="combo.sabores_seleccionados[bandeja.id_bandeja] === combo.cantidad_empanadas"
+                          @change="combo.sabores_seleccionados = { [bandeja.id_bandeja]: combo.cantidad_empanadas }"
+                        >
+                        <label class="btn btn-outline-warning btn-sm w-100 py-2 rounded-3" :for="'b_' + combo.uuid + bandeja.id_bandeja">
+                          <div class="fw-bold">{{ bandeja.sabor?.nombre }}</div>
+                          <div class="small opacity-75">Stock: {{ bandeja.cantidad_disponible }}</div>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div v-if="combo.tipo_combo_fk && combo.tipo_combo_fk !== 1" class="col-12 mt-3">
+                   <div class="list-group">
+                      <div v-for="bandeja in bandejas" :key="bandeja.id_bandeja" class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 py-1 bg-transparent">
+                        <span class="small fw-medium">{{ bandeja.sabor?.nombre }} ({{ bandeja.cantidad_disponible }})</span>
+                        <input 
+                          type="number" 
+                          v-model.number="combo.sabores_seleccionados[bandeja.id_bandeja]" 
+                          class="form-control form-control-sm w-25 border-2" 
+                          min="0"
+                        >
+                      </div>
+                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </ModalForm>
   </div>
 </template>
 
-<script>
+<script setup>
+import { useCombos } from '../composables/useCombos'
 import DataTable from '../common/DataTable.vue'
 import ModalForm from '../common/ModalForm.vue'
 
+const { 
+  combos, pedidos, tiposCombo, bandejas, currentCombo, selectedCombo, agregarComboALista,eliminarComboDeLista,saveMultipleCombos,combosEnCreacion,
+  totalAsignado, editing, openCreateModal, openDetailsModal, saveCombo, confirmDelete 
+} = useCombos()
 
-export default {
-  name: 'CombosCrud',
-  components: { DataTable, ModalForm },
-  data() {
-    return {
-      columns: [
-        { key: 'id_combo', label: 'ID' },
-        { key: 'cantidad_empanadas', label: 'Cantidad' },
-        { key: 'tipo_combo.nombre', label: 'Tipo' },
-        { key: 'pedido.id_pedido', label: 'Pedido #' },
-        { key: 'combo_detalles.length', label: '# Detalles' }
-      ],
-      combos: [
-        {
-          "id_combo": 1,
-          "cantidad_empanadas": 10,
-          "tipo_combo_fk": 1,
-          "pedido_fk": 1,
-          "pedido": {
-            "id_pedido": 1,
-            "hora_entrega": "2000-01-01T14:30:00.000Z",
-            "cliente_fk": "31400974"
-          },
-          "tipo_combo": {
-            "id_tipocombo": 1,
-            "nombre": "Un Sabor"
-          },
-          "combo_detalles": [
-            {
-              "id_combo_detalle": 1,
-              "cantidad_por_sabor": 10,
-              "bandeja_fk": 3,
-              "combo_fk": 1
-            }
-          ]
-        }
-      ],
-      pedidos: [
-        {
-          "id_pedido": 1,
-          "hora_entrega": "2000-01-01T14:30:00.000Z",
-          "cliente_fk": "31400974",
-          "cliente": { "nombre": "Juan" }
-        }
-      ],
-      tiposCombo: [
-        { "id_tipocombo": 1, "nombre": "Un Sabor" },
-        { "id_tipocombo": 2, "nombre": "Dos Sabores" },
-        { "id_tipocombo": 3, "nombre": "Tres Sabores" }
-      ],
-      currentCombo: this.getEmptyCombo(),
-      editing: false
-    }
+const columns = [
+  { key: 'id_combo', label: 'ID', class: 'fw-bold text-center', width: '80px' },
+  { key: 'tipo_combo.nombre', label: 'CATEGORÍA', class: 'fw-bold text-warning' },
+  { key: 'cantidad_empanadas', label: 'UNIDADES', class: 'text-center fw-medium' },
+  { 
+    key: 'pedido', 
+    label: 'PEDIDO ASOCIADO', 
+    format: (row) => `Pedido #${row.pedido_fk || row.pedido?.id_pedido}` 
   },
-  methods: {
-    getEmptyCombo() {
-      return {
-        id_combo: null,
-        cantidad_empanadas: 0,
-        tipo_combo_fk: '',
-        pedido_fk: '',
-        combo_detalles: []
-      }
-    },
-    openCreateModal() {
-      this.currentCombo = this.getEmptyCombo()
-      this.editing = false
-      new bootstrap.Modal(document.getElementById('comboModal')).show()
-    },
-    openEditModal(combo) {
-      this.currentCombo = { ...combo }
-      this.editing = true
-      new bootstrap.Modal(document.getElementById('comboModal')).show()
-    },
-    saveCombo() {
-      const pedido = this.pedidos.find(p => p.id_pedido === this.currentCombo.pedido_fk)
-      const tipo = this.tiposCombo.find(t => t.id_tipocombo === this.currentCombo.tipo_combo_fk)
-      
-      this.currentCombo.pedido = pedido
-      this.currentCombo.tipo_combo = tipo
-      
-      if (this.editing) {
-        const index = this.combos.findIndex(c => c.id_combo === this.currentCombo.id_combo)
-        this.combos.splice(index, 1, this.currentCombo)
-      } else {
-        this.currentCombo.id_combo = this.combos.length + 1
-        this.combos.push(this.currentCombo)
-      }
-    },
-    confirmDelete(combo) {
-      if (confirm(`¿Eliminar combo #${combo.id_combo}?`)) {
-        this.combos = this.combos.filter(c => c.id_combo !== combo.id_combo)
-      }
-    }
+  { 
+    key: 'precio', 
+    label: 'PRECIO', 
+    format: (row) => `$${row.precio}`,
+    class: 'text-success fw-bold'
   }
-}
+]
+
+defineExpose({ openCreateModal })
 </script>
+
+<style scoped>
+.border-bottom-dashed {
+  border-bottom: 1px dashed #dee2e6;
+}
+.list-group-item:last-child {
+  border-bottom: none;
+}
+</style>

@@ -1,34 +1,47 @@
 <template>
-  <div class="card shadow-sm">
-    <div class="card-header bg-white d-flex justify-content-between align-items-center">
-      <h5 class="mb-0">{{ title }}</h5>
-      <button class="btn btn-primary" @click="$emit('create')">
-        <i class="bi bi-plus-circle me-2"></i>Nuevo
-      </button>
-    </div>
-    <div class="card-body">
+  <div class="card shadow-sm m-3 border-0 rounded-4 overflow-hidden">
+    <div class="card-body p-0">
       <div class="table-responsive">
-        <table class="table table-hover">
-          <thead>
+        <table class="table table-hover align-middle mb-0">
+          <thead class="bg-light">
             <tr>
-              <th v-for="column in columns" :key="column.key">
+              <th v-for="column in columns" :key="column.key" :class="column.class" class="py-3 px-4">
                 {{ column.label }}
               </th>
-              <th>Acciones</th>
+              <th class="text-center py-3 px-4">Acciones</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="item in data" :key="item[primaryKey]">
-              <td v-for="column in columns" :key="column.key">
-                {{ getNestedValue(item, column.key) }}
+              <td v-for="column in columns" :key="column.key" :class="column.class" class="px-4">
+                <template v-if="column.format">
+                  {{ column.format(item) }}
+                </template>
+                <template v-else>
+                  {{ getNestedValue(item, column.key) }}
+                </template>
               </td>
-              <td>
-                <button class="btn btn-sm btn-outline-primary me-2" @click="$emit('edit', item)">
-                  <i class="bi bi-pencil"></i>
-                </button>
-                <button class="btn btn-sm btn-outline-danger" @click="$emit('delete', item)">
-                  <i class="bi bi-trash"></i>
-                </button>
+              
+              <td class="px-4">
+                <div class="d-flex justify-content-center gap-2">
+                  <button v-if="showDetail" 
+                    class="btn btn-sm btn-outline-info rounded-pill px-3" 
+                    @click="$emit('view', item)">
+                    <i class="bi bi-eye me-1"></i> Ver
+                  </button>
+
+                  <button v-if="showEdit" 
+                    class="btn btn-sm btn-outline-dark rounded-pill px-3" 
+                    @click="$emit('edit', item)">
+                    <i class="bi bi-pencil me-1"></i> Editar
+                  </button>
+
+                  <button v-if="showDelete" 
+                    class="btn btn-sm btn-outline-danger rounded-circle" 
+                    @click="$emit('delete', item)">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
               </td>
             </tr>
           </tbody>
@@ -42,16 +55,17 @@
 export default {
   name: 'DataTable',
   props: {
-    title: String,
     columns: Array,
     data: Array,
-    primaryKey: {
-      type: String,
-      default: 'id'
-    }
+    primaryKey: { type: String, default: 'id' },
+    // Control de visibilidad de botones
+    showEdit: { type: Boolean, default: true },
+    showDelete: { type: Boolean, default: true },
+    showDetail: { type: Boolean, default: false } // Desactivado por defecto
   },
   methods: {
     getNestedValue(obj, path) {
+      if (!path) return '';
       return path.split('.').reduce((o, p) => (o ? o[p] : '-'), obj);
     }
   }

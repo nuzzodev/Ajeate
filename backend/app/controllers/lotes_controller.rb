@@ -76,6 +76,11 @@ end
   end
 
   def lote_params
-    params.require(:lote).permit(:id_lote, :cantidad_lote)
-  end
+
+  params.require(:lote).permit(
+    :id_lote, 
+    :cantidad_lote, 
+    sabor_lotes_attributes: [:sabor_fk]
+  )
+end
 end
