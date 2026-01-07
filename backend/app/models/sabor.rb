@@ -2,7 +2,7 @@
 class Sabor < ApplicationRecord
   self.table_name = 'sabor'  # IMPORTANTE: tabla singular
   self.primary_key = 'id_sabor'
-  has_many :sabor_materias, foreign_key: 'sabor_fk', primary_key: 'id_sabor'
+  has_many :sabor_materias, foreign_key: 'sabor_fk', primary_key: 'id_sabor',inverse_of: :sabor
   has_many :sabor_lotes, foreign_key: 'sabor_fk', primary_key: 'id_sabor'
 
   has_many :bandejas, foreign_key: 'sabor_fk', primary_key: 'id_sabor'

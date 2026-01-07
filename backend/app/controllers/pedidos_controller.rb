@@ -16,7 +16,7 @@ class PedidosController < ApplicationController
           combo_detalles: {
             include: {
               bandeja: {
-                include: :sabor # <--- ESTO ES LO QUE FALTA
+                include: :sabor 
               }
             }
           }

@@ -41,6 +41,11 @@
                     @click="$emit('delete', item)">
                     <i class="bi bi-trash"></i>
                   </button>
+                  <button v-if="showPrepare" 
+                    class="btn btn-sm btn-warning rounded-pill px-3 fw-bold shadow-sm" 
+                    @click="$emit('prepare', item)">
+                    <i class="bi bi-hammer me-1"></i> Preparar
+                  </button>
                 </div>
               </td>
             </tr>
@@ -61,7 +66,8 @@ export default {
     // Control de visibilidad de botones
     showEdit: { type: Boolean, default: true },
     showDelete: { type: Boolean, default: true },
-    showDetail: { type: Boolean, default: false } // Desactivado por defecto
+    showDetail: { type: Boolean, default: false }, // Desactivado por defecto
+    showPrepare: { type: Boolean, default: false }
   },
   methods: {
     getNestedValue(obj, path) {

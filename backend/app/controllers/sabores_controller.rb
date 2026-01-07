@@ -12,21 +12,34 @@ class SaboresController < ApplicationController
     render json: @sabor, include: [:bandejas, :sabor_materias, :sabor_lotes]
   end
 
-  # POST /sabores
-  def create
-    @sabor = Sabor.new(sabor_params)
 
-    if @sabor.id_sabor.blank?
-      last_id = Sabor.maximum(:id_sabor) || 0
-      @sabor.id_sabor = last_id + 1
-    end
+# POST /sabores
+# app/controllers/sabores_controller.rb
+def create
+  datos = sabor_params
+  if datos[:id_sabor].blank?
+    last_id = Sabor.maximum(:id_sabor) || 0
+    datos[:id_sabor] = last_id + 1
+  end
 
+  @sabor = Sabor.new(datos)
+
+  begin
     if @sabor.save
-      render json: @sabor, status: :created
+      render json: @sabor.as_json(include: :sabor_materias), status: :created
     else
       render json: @sabor.errors, status: :unprocessable_entity
     end
+  rescue ActiveRecord::InvalidForeignKey => e
+    # Capturamos el error de PostgreSQL y lo devolvemos como 422
+    render json: { 
+      error: "Error de integridad: Una de las materias primas especificadas no existe.",
+      detalle: e.message 
+    }, status: :unprocessable_entity
   end
+end
+
+  
 
   # PATCH/PUT /sabores/:id
   def update
@@ -115,6 +128,12 @@ class SaboresController < ApplicationController
   end
 
   def sabor_params
-    params.require(:sabor).permit(:id_sabor, :nombre, :imagen_url, :cantidad)
+  params.require(:sabor).permit(
+    :id_sabor, 
+    :nombre, 
+    :imagen_url, 
+    :cantidad,
+    sabor_materias_attributes: [:materia_prima_fk] # Asegúrate de que este nombre coincida con tu JSON
+  )
   end
 end

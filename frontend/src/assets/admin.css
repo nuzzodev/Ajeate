@@ -16,3 +16,16 @@
   border-left-color: #ffc107;
   color: #212529;
 }
+.navbar-toggler {
+  position: relative;
+  z-index: 1100 !important; /* Por encima de cualquier fondo */
+  display: block !important; /* Asegura que no se oculte por error */
+}
+
+.offcanvas-backdrop {
+  z-index: 1040 !important;
+}
+
+.offcanvas {
+  z-index: 1050 !important;
+}

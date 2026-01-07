@@ -11,7 +11,7 @@ export function useCombos() {
   const bandejas = ref([])
   const isLoading = ref(false)
   const editing = ref(false)
-  const combosEnCreacion = ref([]) // <--- Estado para creación múltiple
+  const combosEnCreacion = ref([])
   
   const currentCombo = ref({ 
     cantidad_empanadas: 10, 
@@ -19,7 +19,7 @@ export function useCombos() {
     pedido_fk: '', 
     sabores_seleccionados: {} 
   })
-  const selectedCombo = ref(null) 
+  const selectedCombo = ref(null)
 
   // Instancias de Bootstrap
   let modalInstance = null
@@ -28,28 +28,34 @@ export function useCombos() {
   // --- COMPUTADAS ---
   const totalAsignado = computed(() => {
     return Object.values(currentCombo.value.sabores_seleccionados)
-                 .reduce((acc, val) => acc + (Number(val) || 0), 0)
+                .reduce((acc, val) => acc + (Number(val) || 0), 0)
   })
 
-  // --- WATCHERS (Autorelleno para un combo individual) ---
-  // Nota: Si usas creación múltiple, podrías necesitar un watcher más complejo, 
-  // pero este sirve para el combo que estés editando actualmente.
-  watch(() => currentCombo.value.tipo_combo_fk, (newTipo) => {
-    if (newTipo && newTipo !== 1 && bandejas.value.length >= 4) {
-      currentCombo.value.sabores_seleccionados = {};
+  // --- FUNCIÓN PARA AUTORELLENAR UN COMBO ---
+  const autoRellenarCombo = (combo) => {
+    if (combo.tipo_combo_fk && combo.tipo_combo_fk !== 1 && bandejas.value.length >= 4) {
+      combo.sabores_seleccionados = {};
       const disponibles = bandejas.value.filter(b => b.cantidad_disponible > 0);
       const seleccionadas = disponibles.sort(() => 0.5 - Math.random()).slice(0, 4);
       
-      const total = currentCombo.value.cantidad_empanadas;
+      const total = combo.cantidad_empanadas;
       const base = Math.floor(total / 4);
       const resto = total % 4;
 
       seleccionadas.forEach((bandeja, index) => {
-        currentCombo.value.sabores_seleccionados[bandeja.id_bandeja] = base + (index < resto ? 1 : 0);
+        combo.sabores_seleccionados[bandeja.id_bandeja] = base + (index < resto ? 1 : 0);
       });
       alerts.success('Sugerencia generada', '4 bandejas seleccionadas');
-    } else if (newTipo === 1) {
-      currentCombo.value.sabores_seleccionados = {};
+    } else if (combo.tipo_combo_fk === 1) {
+      combo.sabores_seleccionados = {};
+    }
+  }
+
+  // --- WATCHERS ---
+  // Watcher para currentCombo (individual) - mantenido por compatibilidad
+  watch(() => currentCombo.value.tipo_combo_fk, (newTipo) => {
+    if (newTipo) {
+      autoRellenarCombo(currentCombo.value);
     }
   });
 
@@ -75,6 +81,19 @@ export function useCombos() {
     }
   }
 
+  // --- FUNCIÓN PARA OBTENER DETALLES DE UN COMBO ---
+  const fetchComboDetails = async (id) => {
+    try {
+      const response = await empanadasService.getComboById(id);
+      selectedCombo.value = response;
+      return response;
+    } catch (error) {
+      console.error("Error fetching combo details:", error);
+      alerts.error('Error', 'No se pudieron cargar los detalles del combo');
+      return null;
+    }
+  };
+
   // --- CICLO DE VIDA ---
   onMounted(() => {
     const modalEl = document.getElementById('comboModal')
@@ -87,15 +106,31 @@ export function useCombos() {
   })
 
   // --- GESTIÓN DE LISTA DE COMBOS ---
-const agregarComboALista = () => {
-  combosEnCreacion.value.push({
-    uuid: self.crypto.randomUUID(),
-    cantidad_empanadas: 10,
-    tipo_combo_fk: '',
-    pedido_fk: currentCombo.value.pedido_fk, // <--- Importante: hereda el pedido del select general
-    sabores_seleccionados: {}
-  })
-}
+  const agregarComboALista = () => {
+    const nuevoCombo = {
+      uuid: window.crypto.randomUUID(),
+      cantidad_empanadas: 10,
+      tipo_combo_fk: '',
+      pedido_fk: currentCombo.value.pedido_fk,
+      sabores_seleccionados: {}
+    };
+    
+    combosEnCreacion.value.push(nuevoCombo);
+    
+    // Si hay bandejas disponibles, podemos observar cambios en este combo específico
+    if (bandejas.value.length > 0) {
+      // Usamos un watcher local para este combo específico
+      watch(
+        () => nuevoCombo.tipo_combo_fk,
+        (newTipo) => {
+          if (newTipo) {
+            autoRellenarCombo(nuevoCombo);
+          }
+        },
+        { immediate: false }
+      );
+    }
+  }
 
   const eliminarComboDeLista = (index) => {
     combosEnCreacion.value.splice(index, 1)
@@ -104,11 +139,9 @@ const agregarComboALista = () => {
   // --- ACCIONES ---
   const openCreateModal = () => {
     editing.value = false
-    // Reiniciamos la lista de creación masiva
     combosEnCreacion.value = []
-    agregarComboALista() // Empezamos con uno
+    agregarComboALista()
     
-    // Reiniciamos el combo individual por si acaso
     currentCombo.value = { 
       cantidad_empanadas: 10, 
       tipo_combo_fk: '', 
@@ -118,63 +151,84 @@ const agregarComboALista = () => {
     modalInstance?.show()
   }
 
-  const openDetailsModal = (combo) => {
-    selectedCombo.value = combo
-    detailsModalInstance?.show()
-  }
-
-const saveMultipleCombos = async () => {
-  try {
-    isLoading.value = true;
-    
-    // Validamos que haya un pedido seleccionado
-    if (!currentCombo.value.pedido_fk) {
-      alerts.error('Falta información', 'Por favor selecciona un pedido.');
-      return;
-    }
-
-    // USAMOS UN BUCLE FOR...OF para que sea SECUENCIAL
-    for (const [index, c] of combosEnCreacion.value.entries()) {
-      const detalles = Object.entries(c.sabores_seleccionados)
-        .filter(([_, cant]) => cant > 0)
-        .map(([bandejaId, cant]) => ({
-          cantidad_por_sabor: cant,
-          bandeja_fk: parseInt(bandejaId)
-        }));
-
-      const payload = {
-        combo: {
-          cantidad_empanadas: c.cantidad_empanadas,
-          tipo_combo_fk: c.tipo_combo_fk,
-          pedido_fk: currentCombo.value.pedido_fk,
-          combo_detalles_attributes: detalles
+  const openDetailsModal = async (combo) => {
+    try {
+      const comboDetails = await fetchComboDetails(combo.id_combo);
+      if (comboDetails) {
+        selectedCombo.value = comboDetails;
+        if (detailsModalInstance) {
+          detailsModalInstance.show();
+        } else {
+          const detailsEl = document.getElementById('detailsComboModal');
+          if (detailsEl) {
+            detailsModalInstance = new bootstrap.Modal(detailsEl);
+            detailsModalInstance.show();
+          }
         }
-      };
-
-      // Esperamos a que termine este ANTES de seguir con el siguiente
-      await empanadasService.createCombo(payload);
-      console.log(`Combo ${index + 1} creado con éxito`);
+      }
+    } catch (error) {
+      console.error("Error al abrir detalles:", error);
+      alerts.error('Error', 'No se pudo abrir los detalles del combo');
     }
+  };
 
-    alerts.success('¡Éxito!', `Se crearon ${combosEnCreacion.value.length} combos correctamente.`);
-    await fetchData();
-    modalInstance?.hide();
-  } catch (error) {
-    console.error("Error en la cadena de creación:", error);
-    alerts.error('Error', 'Ocurrió un problema al crear los combos. Verifica el stock.');
-  } finally {
-    isLoading.value = false;
+  // --- MÉTODO PARA ACTUALIZAR UN COMBO ESPECÍFICO EN LA LISTA ---
+  const actualizarComboEnLista = (index, campo, valor) => {
+    if (combosEnCreacion.value[index]) {
+      combosEnCreacion.value[index][campo] = valor;
+      
+      // Si se cambió el tipo de combo, aplicar auto-relleno
+      if (campo === 'tipo_combo_fk' && valor) {
+        autoRellenarCombo(combosEnCreacion.value[index]);
+      }
+    }
   }
-};
 
-  // Guardado Individual (Mantenido por compatibilidad)
+  const saveMultipleCombos = async () => {
+    try {
+      isLoading.value = true;
+      
+      if (!currentCombo.value.pedido_fk) {
+        alerts.error('Falta información', 'Por favor selecciona un pedido.');
+        return;
+      }
+
+      for (const [index, c] of combosEnCreacion.value.entries()) {
+        const detalles = Object.entries(c.sabores_seleccionados)
+          .filter(([_, cant]) => cant > 0)
+          .map(([bandejaId, cant]) => ({
+            cantidad_por_sabor: cant,
+            bandeja_fk: parseInt(bandejaId)
+          }));
+
+        const payload = {
+          combo: {
+            cantidad_empanadas: c.cantidad_empanadas,
+            tipo_combo_fk: c.tipo_combo_fk,
+            pedido_fk: currentCombo.value.pedido_fk,
+            combo_detalles_attributes: detalles
+          }
+        };
+
+        await empanadasService.createCombo(payload);
+      }
+
+      alerts.success('¡Éxito!', `Se crearon ${combosEnCreacion.value.length} combos correctamente.`);
+      await fetchData();
+      modalInstance?.hide();
+    } catch (error) {
+      console.error("Error en la cadena de creación:", error);
+      alerts.error('Error', 'Ocurrió un problema al crear los combos. Verifica el stock.');
+    } finally {
+      isLoading.value = false;
+    }
+  };
+
   const saveCombo = async () => {
-    // Si hay varios en la lista, usamos la lógica masiva
     if (combosEnCreacion.value.length > 1) {
-        return saveMultipleCombos();
+      return saveMultipleCombos();
     }
 
-    // Si solo hay uno, validamos ese específico
     if (totalAsignado.value !== currentCombo.value.cantidad_empanadas) {
       alerts.error('Error', `Asigna exactamente ${currentCombo.value.cantidad_empanadas} empanadas.`);
       return;
@@ -209,6 +263,6 @@ const saveMultipleCombos = async () => {
     combos, pedidos, tiposCombo, bandejas, currentCombo, selectedCombo,
     combosEnCreacion, agregarComboALista, eliminarComboDeLista, saveMultipleCombos,
     totalAsignado, editing, isLoading, saveCombo, fetchData,
-    openCreateModal, openDetailsModal
+    openCreateModal, openDetailsModal, actualizarComboEnLista, autoRellenarCombo
   }
 }

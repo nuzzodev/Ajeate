@@ -1,7 +1,7 @@
 <template>
   <div class="page-wrapper bg-white min-vh-100">
     <SectionHeader 
-      title="Admin" 
+      title="Bandejas" 
       subtitle="Control de Bandejas" 
       buttonText="Nueva Producción"
       @primary-action="triggerCreate"

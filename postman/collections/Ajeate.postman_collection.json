@@ -1389,7 +1389,7 @@
               "variable": [
                 {
                   "key": "id",
-                  "value": "11"
+                  "value": "5"
                 }
               ]
             }
@@ -1404,7 +1404,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"pedido\": {\r\n    \"hora_entrega\": \"2025-12-29T14:30:00.000Z\",\r\n    \"cliente_fk\": \"31400974\",\r\n    \"combos_attributes\": [\r\n      {\r\n        \"cantidad_empanadas\": 12,\r\n        \"tipo_combo_fk\": 1,\r\n        \"precio\": 14.50,\r\n        \"combo_detalles_attributes\": [\r\n          {\r\n            \"bandeja_fk\": 1,\r\n            \"cantidad_por_sabor\": 6\r\n          },\r\n          {\r\n            \"bandeja_fk\": 2,\r\n            \"cantidad_por_sabor\": 6\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"cantidad_empanadas\": 8,\r\n        \"tipo_combo_fk\": 2,\r\n        \"precio\": 9.50,\r\n        \"combo_detalles_attributes\": [\r\n          {\r\n            \"bandeja_fk\": 3,\r\n            \"cantidad_por_sabor\": 4\r\n          },\r\n          {\r\n            \"bandeja_fk\": 4,\r\n            \"cantidad_por_sabor\": 4\r\n          }\r\n        ]\r\n      }\r\n    ]\r\n  }\r\n}",
+              "raw": "{\r\n  \"pedido\": {\r\n    \"hora_entrega\": \"2000-01-01T14:30:00.000Z\",\r\n    \"cliente_fk\": \"31400974\"\r\n  }\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
