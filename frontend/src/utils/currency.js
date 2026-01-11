@@ -8,7 +8,7 @@ let tasaCache = {
 };
 
 // Tiempo de caché: 5 minutos (300000 ms)
-const CACHE_DURATION = 5 * 60 * 1000;
+const CACHE_DURATION = 60 * 60 * 1000;
 
 export const currencyUtils = {
   // Obtener tasa con caché

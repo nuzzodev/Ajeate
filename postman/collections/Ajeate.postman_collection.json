@@ -1492,6 +1492,36 @@
       "id": "787e8a2f-61c3-4be6-9d9e-cef8c36024c7"
     },
     {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get Users",
+          "id": "6f53ad9e-e569-4353-81cb-e5cc0e5947d4",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": ""
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Post Users",
+          "id": "9af80148-1cc8-443c-a953-2a3f2914d37b",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": ""
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "49cc0175-e8f9-4712-a080-0b43683cf117"
+    },
+    {
       "name": "Heatlh",
       "id": "d032f4b0-12ad-4c77-a56b-4a81f0ed3d31",
       "request": {

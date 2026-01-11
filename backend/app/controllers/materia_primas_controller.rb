@@ -2,6 +2,7 @@
 class MateriaPrimasController < ApplicationController
   before_action :set_materia_prima, only: [:show, :update, :destroy]
 
+  INVENTARIO_BAJO=20
   # GET /materia_primas
   def index
     @materia_primas = MateriaPrima.all
@@ -47,7 +48,7 @@ class MateriaPrimasController < ApplicationController
 
   # GET /materia_primas/inventario/bajo
   def inventario_bajo
-    @materia_primas = MateriaPrima.where('cantidad < ?', 20) # Ajusta el límite según necesites
+    @materia_primas = MateriaPrima.where('cantidad < ?', INVENTARIO_BAJO)
     render json: @materia_primas
   end
 

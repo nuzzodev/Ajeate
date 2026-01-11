@@ -105,14 +105,3 @@ const props = defineProps({
 const { itemsMenu, itemsAgrupados } = useMenuLogic(props)
 </script>
 
-<style scoped>
-.carousel-indicators button {
-  opacity: 0.5;
-  border: none;
-}
-
-.carousel-indicators button.active {
-  opacity: 1;
-  background-color: #ffc107 !important;
-}
-</style>

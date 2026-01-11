@@ -8,6 +8,7 @@ class PedidosController < ApplicationController
     render json: @pedidos, include: [:cliente]
   end
 
+  #GET /pedidos/:id
   def show
     render json: @pedido, include: {
       cliente: {},

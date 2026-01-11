@@ -1,4 +1,3 @@
-# Gemfile - VERSIÓN MODIFICADA
 source "https://rubygems.org"
 
 gem "rails", "~> 8.1.1"
@@ -6,9 +5,9 @@ gem "pg", "~> 1.1"
 gem "puma", ">= 5.0"
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 
-# IMPORTANTE: Descomenta y agrega estas gemas:
-gem "jbuilder"           # Para serialización JSON
-gem "rack-cors"          # Para permitir peticiones desde Vue.js
+
+gem "jbuilder"           
+gem "rack-cors"          
 
 gem "solid_cache"
 gem "solid_queue"
@@ -17,6 +16,8 @@ gem "bootsnap", require: false
 gem "kamal", require: false
 gem "thruster", require: false
 gem "image_processing", "~> 1.2"
+gem  "bcrypt","~> 3.1.7"
+gem 'discard', '~> 1.3'
 
 group :development, :test do
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"

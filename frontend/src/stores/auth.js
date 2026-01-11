@@ -5,24 +5,9 @@ export const useAuthStore = defineStore('auth', () => {
   const user = ref(null)
   const isAuthenticated = computed(() => !!user.value)
   
-  // Usuarios de ejemplo (en producción esto vendría de una API)
-  const users = [
-    { username: 'admin', password: 'admin123', role: 'admin', name: 'Administrador' },
-    { username: 'empleado', password: 'empleado123', role: 'empleado', name: 'Empleado' }
-  ]
-  
-  function login(username, password) {
-    const foundUser = users.find(u => 
-      u.username === username && u.password === password
-    )
-    
-    if (foundUser) {
-      user.value = foundUser
-      localStorage.setItem('auth_user', JSON.stringify(foundUser))
-      return { success: true, user: foundUser }
-    }
-    
-    return { success: false, message: 'Credenciales incorrectas' }
+  function login(userData) {
+    user.value = userData
+    localStorage.setItem('auth_user', JSON.stringify(userData))
   }
   
   function logout() {

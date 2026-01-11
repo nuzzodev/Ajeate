@@ -267,5 +267,13 @@ export const empanadasService = {
   async deletePedido(id) {
     const response = await apiEmpanadas.delete(`/pedidos/${id}`);
     return response.data;
+  },
+  async getUsers(){
+    const response = await apiEmpanadas.get('/users');
+    return response.data;
+  },
+  async login(name, password) {
+  const response = await apiEmpanadas.post('/login', { name, password });
+  return response.data;
   }
 };

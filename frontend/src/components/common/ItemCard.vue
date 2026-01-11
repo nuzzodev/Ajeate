@@ -37,18 +37,7 @@
         {{ item.descripcion }}
       </p>
       
-      <!-- Sabores incluidos (solo para variado) -->
-      <div v-if="item.tipo === 'variado' && item.sabores && item.sabores.length > 0" class="mb-3">
-        <small class="text-muted d-block mb-1">Incluye:</small>
-        <div class="d-flex flex-wrap justify-content-center gap-1">
-          <span v-for="sabor in saboresUnicos" 
-                :key="sabor.id"
-                class="badge bg-light text-dark border">
-            {{ sabor.nombre }}
-          </span>
-        </div>
-        <small class="text-muted">y más...</small>
-      </div>
+      
       
       <!-- Precio -->
       <div class="mb-3">

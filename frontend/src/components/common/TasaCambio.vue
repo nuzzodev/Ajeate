@@ -78,7 +78,7 @@ export default {
     // Temporizador de actualización automática
     const tiempoTranscurrido = ref(0)
     const intervalo = ref(null)
-    const TIEMPO_ACTUALIZACION = 5 * 60 // 5 minutos en segundos
+    const TIEMPO_ACTUALIZACION = 60 * 60 // 5 minutos en segundos
 
     const cargarTasa = async () => {
       cargando.value = true

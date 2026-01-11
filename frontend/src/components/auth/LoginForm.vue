@@ -9,14 +9,14 @@
       
       <form @submit.prevent="handleSubmit">
         <div class="mb-3">
-          <label for="username" class="form-label">Usuario</label>
+          <label for="name" class="form-label">Usuario</label>
           <input 
             type="text" 
             class="form-control" 
-            id="username"
-            v-model="form.username"
+            id="name"
+            v-model="form.name" 
             required
-            placeholder="Ingresa tu usuario">
+            placeholder="Ingresa tu nombre de usuario">
         </div>
         
         <div class="mb-4">
@@ -48,29 +48,20 @@
           </span>
         </button>
       </form>
-      
-      <hr class="my-4">
-      
-      <div class="text-center">
-        <small class="text-muted">Credenciales de prueba:</small>
-        <div class="mt-2">
-          <span class="badge bg-info me-2">admin / admin123</span>
-          <span class="badge bg-secondary">empleado / empleado123</span>
-        </div>
-      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { useAuthStore } from '../../stores/auth'
+import { empanadasService } from '@/api/empanadasApi'; 
+import { useAuthStore } from '@/stores/auth';
 
 export default {
   name: 'LoginForm',
   data() {
     return {
       form: {
-        username: '',
+        name: '',
         password: ''
       },
       error: '',
@@ -79,21 +70,27 @@ export default {
   },
   methods: {
     async handleSubmit() {
-      this.loading = true
-      this.error = ''
+      this.loading = true;
+      this.error = '';
+      const authStore = useAuthStore();
       
-      const authStore = useAuthStore()
-      const result = authStore.login(this.form.username, this.form.password)
-      
-      setTimeout(() => {
-        this.loading = false
+      try {
+        const data = await empanadasService.login(this.form.name, this.form.password);
         
-        if (result.success) {
-          this.$router.push('/admin/dashboard')
+        // Usamos el método login del store para actualizar el estado y el localStorage
+        authStore.login(data);
+
+        this.$router.push({ name: 'dashboard' });
+
+      } catch (err) {
+        if (err.response && err.response.status === 401) {
+          this.error = "Usuario o contraseña incorrectos";
         } else {
-          this.error = result.message
+          this.error = "Error de conexión con el servidor";
         }
-      }, 500) // Simula tiempo de red
+      } finally {
+        this.loading = false;
+      }
     }
   }
 }

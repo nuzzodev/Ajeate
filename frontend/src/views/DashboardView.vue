@@ -1,125 +1,46 @@
 <template>
-  <div class="dashboard">
-    <div class="row mb-4">
-      <div class="col-12">
-        <h2 class="h4 fw-bold">Dashboard Administrativo</h2>
+  <div class="dashboard p-2 p-md-4">
+    <div class="row mb-4 align-items-center">
+      <div class="col">
+        <h2 class="h3 fw-bold mb-1 text-dark">Dashboard Administrativo</h2>
         <p class="text-muted mb-0">
-          Bienvenido, {{ authStore.user?.name }}. 
-          <span v-if="authStore.user?.role === 'admin'">(Administrador)</span>
-          <span v-else>(Empleado)</span>
+          <i class="bi bi-calendar3 me-2"></i>{{ fechaActual }} | 
+          <strong>{{ authStore.user?.name }}</strong> 
+          <span class="badge bg-secondary-subtle text-secondary ms-2 text-uppercase">
+            {{ authStore.user?.role }}
+          </span>
         </p>
       </div>
     </div>
     
-    <div class="row g-4 mb-4">
-      <div class="col-md-3">
-        <div class="card border-0 shadow-sm bg-primary text-white">
-          <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center">
-              <div>
-                <h6 class="card-title mb-0">Clientes</h6>
-                <h3 class="mb-0">15</h3>
-              </div>
-              <i class="bi bi-people fs-1"></i>
-            </div>
-          </div>
-        </div>
+    <StatsCard />
+
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <InventoryAlerts />
       </div>
-      
-      <div class="col-md-3">
-        <div class="card border-0 shadow-sm bg-success text-white">
-          <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center">
-              <div>
-                <h6 class="card-title mb-0">Pedidos Hoy</h6>
-                <h3 class="mb-0">8</h3>
-              </div>
-              <i class="bi bi-clipboard-check fs-1"></i>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="col-md-3">
-        <div class="card border-0 shadow-sm bg-warning text-dark">
-          <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center">
-              <div>
-                <h6 class="card-title mb-0">Emapanadas Vendidas</h6>
-                <h3 class="mb-0">120</h3>
-              </div>
-              <i class="bi bi-egg-fried fs-1"></i>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="col-md-3">
-        <div class="card border-0 shadow-sm bg-info text-white">
-          <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center">
-              <div>
-                <h6 class="card-title mb-0">Bandejas Activas</h6>
-                <h3 class="mb-0">6</h3>
-              </div>
-              <i class="bi bi-tray fs-1"></i>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="row">
-      <div class="col-12">
-        <div class="card border-0 shadow-sm">
-          <div class="card-header bg-white">
-            <h5 class="mb-0">Acciones Rápidas</h5>
-          </div>
-          <div class="card-body">
-            <div class="row g-3">
-              <div class="col-md-4">
-                <router-link to="/admin/clientes" class="card h-100 border text-decoration-none">
-                  <div class="card-body text-center">
-                    <i class="bi bi-person-plus display-6 text-primary mb-3"></i>
-                    <h6>Nuevo Cliente</h6>
-                  </div>
-                </router-link>
-              </div>
-              <div class="col-md-4">
-                <router-link to="/admin/pedidos" class="card h-100 border text-decoration-none">
-                  <div class="card-body text-center">
-                    <i class="bi bi-plus-circle display-6 text-success mb-3"></i>
-                    <h6>Crear Pedido</h6>
-                  </div>
-                </router-link>
-              </div>
-              <div class="col-md-4">
-                <router-link to="/admin/bandejas" class="card h-100 border text-decoration-none">
-                  <div class="card-body text-center">
-                    <i class="bi bi-plus-square display-6 text-warning mb-3"></i>
-                    <h6>Nueva Bandeja</h6>
-                  </div>
-                </router-link>
-              </div>
-            </div>
-          </div>
-        </div>
+
+      <div class="col-lg-8">
+        <QuickAction />
       </div>
     </div>
   </div>
 </template>
 
-<script>
-import { useAuthStore } from '../stores/auth'
+<script setup>
+import { computed } from 'vue';
+import { useAuthStore } from '@/stores/auth';
 
-export default {
-  name: 'DashboardView',
-  setup() {
-    const authStore = useAuthStore()
-    
-    return {
-      authStore
-    }
-  }
-}
+
+import StatsCard from '@/components/dashboard/StatsCard.vue';
+import InventoryAlerts from '@/components/dashboard/InventoryAlerts.vue';
+import QuickAction from '@/components/dashboard/QuickAction.vue';
+
+const authStore = useAuthStore();
+
+const fechaActual = computed(() => {
+  return new Intl.DateTimeFormat('es-ES', { 
+    dateStyle: 'full' 
+  }).format(new Date());
+});
 </script>

@@ -14,20 +14,10 @@
         </router-link>
 
         <!-- Dropdown del usuario - Bootstrap lo maneja automáticamente -->
-        <div class="dropdown ms-auto">
-          <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown"
-            aria-expanded="false">
-            <i class="bi bi-person-circle me-1"></i>
-            {{ authStore.user?.name }}
-          </button>
-          <ul class="dropdown-menu dropdown-menu-end">
-            <li>
-              <button class="dropdown-item" type="button" @click="logout">
-                <i class="bi bi-box-arrow-right me-2"></i>Cerrar Sesión
-              </button>
-            </li>
-          </ul>
-        </div>
+        <button class="btn btn-outline-warning btn-sm ms-auto" type="button" @click="handleLogout">
+          <i class="bi bi-box-arrow-right me-1"></i>
+          Cerrar Sesión
+        </button>
       </div>
     </nav>
 
@@ -76,7 +66,7 @@
               <li class="nav-item">
                 <router-link to="/admin/bandejas" class="nav-link d-flex align-items-center"
                   :class="{ 'active': $route.path.includes('/bandejas') }">
-                  <i class="bi bi-tray me-2"></i>Bandejas
+                  <i class="bi bi-inboxes me-2"></i>Bandejas
                 </router-link>
               </li>
               <li class="nav-item">
@@ -205,8 +195,8 @@
 <script>
 import { useAuthStore } from '../../stores/auth'
 import { useRouter, useRoute } from 'vue-router'
-import { computed, onMounted } from 'vue' // Añadimos onMounted
-import { Offcanvas } from 'bootstrap'
+import { computed } from 'vue'
+import { alerts } from '../../utils/alerts'
 
 export default {
   name: 'AdminLayout',
@@ -217,25 +207,34 @@ export default {
 
     const toggleSidebar = () => {
       const element = document.getElementById('sidebarOffcanvas')
-      if (element) {
-        const bsOffcanvas = Offcanvas.getOrCreateInstance(element)
-
-        // Si el menú ya está abierto, lo ocultamos (esto limpia el backdrop)
-        if (element.classList.contains('show')) {
-          bsOffcanvas.hide()
-        } else {
-          bsOffcanvas.show()
-        }
+      if (element && window.bootstrap) {
+        const bsOffcanvas = window.bootstrap.Offcanvas.getOrCreateInstance(element)
+        element.classList.contains('show') ? bsOffcanvas.hide() : bsOffcanvas.show()
       }
     }
+
+    const handleLogout = async () => {
+      const result = await alerts.confirm(
+        '¿Cerrar sesión?',
+        'Deberás ingresar tus credenciales nuevamente para acceder.'
+      )
+
+      if (result.isConfirmed) {
+        // Primero limpiamos el store
+        authStore.logout()
+        // Redirigimos usando replace para limpiar el historial
+        router.replace('/login').then(() => {
+          alerts.success('Sesión cerrada correctamente')
+        })
+      }
+    }
+
     const navigateAndClose = (path) => {
-      // Primero cerramos el menú
       const element = document.getElementById('sidebarOffcanvas')
-      if (element) {
-        const instance = Offcanvas.getInstance(element)
+      if (element && window.bootstrap) {
+        const instance = window.bootstrap.Offcanvas.getInstance(element)
         if (instance) instance.hide()
       }
-      // Luego navegamos
       router.push(path)
     }
 
@@ -250,20 +249,12 @@ export default {
       '/admin/materias_primas': 'Materias Primas'
     }
 
-    const currentPageTitle = computed(() => {
-      return pageTitles[route.path] || 'Administración'
-    })
+    const currentPageTitle = computed(() => pageTitles[route.path] || 'Administración')
 
-    const logout = () => {
-      authStore.logout()
-      router.replace('/login')
-    }
-
-    // ¡IMPORTANTE!: Debes retornar toggleSidebar para que el template lo use
     return {
       authStore,
       currentPageTitle,
-      logout,
+      handleLogout,
       toggleSidebar,
       navigateAndClose
     }

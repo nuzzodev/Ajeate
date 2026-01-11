@@ -14,7 +14,6 @@ class SaboresController < ApplicationController
 
 
 # POST /sabores
-# app/controllers/sabores_controller.rb
 def create
   datos = sabor_params
   if datos[:id_sabor].blank?
@@ -31,9 +30,8 @@ def create
       render json: @sabor.errors, status: :unprocessable_entity
     end
   rescue ActiveRecord::InvalidForeignKey => e
-    # Capturamos el error de PostgreSQL y lo devolvemos como 422
     render json: { 
-      error: "Error de integridad: Una de las materias primas especificadas no existe.",
+      error: "Una de las materias primas especificadas no existe.",
       detalle: e.message 
     }, status: :unprocessable_entity
   end
@@ -133,7 +131,7 @@ end
     :nombre, 
     :imagen_url, 
     :cantidad,
-    sabor_materias_attributes: [:materia_prima_fk] # Asegúrate de que este nombre coincida con tu JSON
+    sabor_materias_attributes: [:materia_prima_fk] 
   )
   end
 end

@@ -50,8 +50,11 @@ Rails.application.routes.draw do
       get 'inventario/bajo',to: 'materia_primas#inventario_bajo'
     end
   end
+
+  resources :users, except: [:edit, :update, :destroy]
+  post '/login', to: 'users#login'
   
-  # Health check endpoint
+  # Health check endpoint --- PARA REVISAR SI LEVANTO CORRECTAMENTE
   get 'health', to: 'health#check'
   
   # Root

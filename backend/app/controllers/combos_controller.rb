@@ -22,7 +22,6 @@ class CombosController < ApplicationController
   end
 
   # POST /combos
-# app/controllers/combos_controller.rb
   def create
     @combo = Combo.new(combo_params)
     
