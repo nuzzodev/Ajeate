@@ -4,7 +4,7 @@ class PedidosController < ApplicationController
 
   # GET /pedidos
   def index
-    @pedidos = Pedido.includes(:cliente).all
+    @pedidos = Pedido.includes(:cliente).kept
     render json: @pedidos, include: [:cliente]
   end
 
@@ -49,8 +49,11 @@ class PedidosController < ApplicationController
 
   # DELETE /pedidos/:id
   def destroy
-    @pedido.destroy
-    head :no_content
+    if @pedido.discard
+      render json: { message: "Registro desactivado con éxito (borrado lógico)" }, status: :ok
+    else
+      render json: { errors: @cliente.errors.full_messages }, status: :unprocessable_entity
+    end
   end
 
   private

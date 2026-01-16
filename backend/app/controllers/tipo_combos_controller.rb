@@ -4,7 +4,7 @@ class TipoCombosController < ApplicationController
 
   # GET /tipo_combos
   def index
-    @tipo_combos = TipoCombo.all
+    @tipo_combos = TipoCombo.kept
     render json: @tipo_combos
   end
 
@@ -41,8 +41,11 @@ class TipoCombosController < ApplicationController
 
   # DELETE /tipo_combos/:id
   def destroy
-    @tipo_combo.destroy
-    head :no_content
+    if @tipo_combo.discard
+      render json: { message: "Registro desactivado con éxito (borrado lógico)" }, status: :ok
+    else
+      render json: { errors: @cliente.errors.full_messages }, status: :unprocessable_entity
+    end
   end
 
   # GET /tipo_combos/:id/combos

@@ -3,7 +3,7 @@ class ClientesController < ApplicationController
 
   # GET /clientes
   def index
-    @clientes = Cliente.all
+    @clientes = Cliente.kept
     render json: @clientes
   end
 
@@ -15,9 +15,6 @@ class ClientesController < ApplicationController
   # POST /clientes
   def create
     @cliente = Cliente.new(cliente_params)
-    
-    # Generar ID único si no se proporciona
-    @cliente.id_cliente ||= "CLI-#{SecureRandom.hex(4).upcase}"
 
     if @cliente.save
       render json: @cliente, status: :created
@@ -37,8 +34,11 @@ class ClientesController < ApplicationController
 
   # DELETE /clientes/:id
   def destroy
-    @cliente.destroy
-    head :no_content
+    if @cliente.discard
+      render json: { message: "Registro desactivado con éxito (borrado lógico)" }, status: :ok
+    else
+      render json: { errors: @cliente.errors.full_messages }, status: :unprocessable_entity
+    end
   end
 
   # GET /clientes/:id/pedidos

@@ -4,7 +4,7 @@ class LotesController < ApplicationController
 
   # GET /lotes
   def index
-    @lotes = Lote.includes(:sabor_lotes).all
+    @lotes = Lote.includes(:sabor_lotes).kept
     render json: @lotes, include: [:sabor_lotes]
   end
 
@@ -41,8 +41,11 @@ class LotesController < ApplicationController
 
   # DELETE /lotes/:id
   def destroy
-    @lote.destroy
-    head :no_content
+    if @lote.discard
+      render json: { message: "Registro desactivado con éxito (borrado lógico)" }, status: :ok
+    else
+      render json: { errors: @cliente.errors.full_messages }, status: :unprocessable_entity
+    end
   end
 
 def agregar_sabor

@@ -4,7 +4,7 @@ class BandejasController < ApplicationController
 
   # GET /bandejas
   def index
-    @bandejas = Bandeja.includes(:sabor).all
+    @bandejas = Bandeja.includes(:sabor).kept
     render json: @bandejas, include: [:sabor]
   end
 
@@ -41,8 +41,11 @@ class BandejasController < ApplicationController
 
   # DELETE /bandejas/:id
   def destroy
-    @bandeja.destroy
-    head :no_content
+    if @bandeja.discard
+      render json: { message: "Registro desactivado con éxito (borrado lógico)" }, status: :ok
+    else
+      render json: { errors: @cliente.errors.full_messages }, status: :unprocessable_entity
+    end
   end
 
   # GET /bandejas/stock/bajo

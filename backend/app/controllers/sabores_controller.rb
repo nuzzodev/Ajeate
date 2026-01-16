@@ -3,7 +3,7 @@ class SaboresController < ApplicationController
 
   # GET /sabores
   def index
-    @sabores = Sabor.all
+    @sabores = Sabor.kept
     render json: @sabores
   end
 
@@ -50,8 +50,11 @@ end
 
   # DELETE /sabores/:id
   def destroy
-    @sabor.destroy
-    head :no_content
+    if @sabor.discard
+      render json: { message: "Registro desactivado con éxito (borrado lógico)" }, status: :ok
+    else
+      render json: { errors: @cliente.errors.full_messages }, status: :unprocessable_entity
+    end
   end
 
   # GET /sabores/:id/materias_primas

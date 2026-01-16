@@ -5,7 +5,7 @@ class MateriaPrimasController < ApplicationController
   INVENTARIO_BAJO=20
   # GET /materia_primas
   def index
-    @materia_primas = MateriaPrima.all
+    @materia_primas = MateriaPrima.kept
     render json: @materia_primas
   end
 
@@ -42,8 +42,11 @@ class MateriaPrimasController < ApplicationController
 
   # DELETE /materia_primas/:id
   def destroy
-    @materia_prima.destroy
-    head :no_content
+    if @materia_prima.discard
+      render json: { message: "Registro desactivado con éxito (borrado lógico)" }, status: :ok
+    else
+      render json: { errors: @cliente.errors.full_messages }, status: :unprocessable_entity
+    end
   end
 
   # GET /materia_primas/inventario/bajo

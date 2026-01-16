@@ -5,7 +5,7 @@ class CombosController < ApplicationController
   # GET /combos
 
   def index
-    @combos = Combo.all
+    @combos = Combo.kept
     
     @combos = @combos.includes(:tipo_combo, :combo_detalles)
     
@@ -68,8 +68,11 @@ class CombosController < ApplicationController
 
   # DELETE /combos/:id
   def destroy
-    @combo.destroy
-    head :no_content
+    if @combo.discard
+      render json: { message: "Registro desactivado con éxito (borrado lógico)" }, status: :ok
+    else
+      render json: { errors: @cliente.errors.full_messages }, status: :unprocessable_entity
+    end
   end
   
   # GET /combos/por_sabor/:sabor_id
