@@ -66,7 +66,7 @@ export default {
     // Control de visibilidad de botones
     showEdit: { type: Boolean, default: true },
     showDelete: { type: Boolean, default: true },
-    showDetail: { type: Boolean, default: false }, // Desactivado por defecto
+    showDetail: { type: Boolean, default: false },
     showPrepare: { type: Boolean, default: false }
   },
   methods: {

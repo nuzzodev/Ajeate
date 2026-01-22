@@ -13,7 +13,6 @@
           <input 
             type="text" 
             class="form-control" 
-            id="name"
             v-model="form.name" 
             required
             placeholder="Ingresa tu nombre de usuario">
@@ -24,7 +23,6 @@
           <input 
             type="password" 
             class="form-control" 
-            id="password"
             v-model="form.password"
             required
             placeholder="Ingresa tu contraseña">
@@ -32,7 +30,7 @@
         
         <div v-if="error" class="alert alert-danger alert-dismissible fade show" role="alert">
           {{ error }}
-          <button type="button" class="btn-close" @click="error = ''"></button>
+          <button type="button" class="btn-close" @click="clearError"></button>
         </div>
         
         <button 
@@ -52,46 +50,9 @@
   </div>
 </template>
 
-<script>
-import { empanadasService } from '@/api/empanadasApi'; 
-import { useAuthStore } from '@/stores/auth';
+<script setup>
+import { useLoginForm } from '../composables/useLoginForm';
 
-export default {
-  name: 'LoginForm',
-  data() {
-    return {
-      form: {
-        name: '',
-        password: ''
-      },
-      error: '',
-      loading: false
-    }
-  },
-  methods: {
-    async handleSubmit() {
-      this.loading = true;
-      this.error = '';
-      const authStore = useAuthStore();
-      
-      try {
-        const data = await empanadasService.login(this.form.name, this.form.password);
-        
-        // Usamos el método login del store para actualizar el estado y el localStorage
-        authStore.login(data);
-
-        this.$router.push({ name: 'dashboard' });
-
-      } catch (err) {
-        if (err.response && err.response.status === 401) {
-          this.error = "Usuario o contraseña incorrectos";
-        } else {
-          this.error = "Error de conexión con el servidor";
-        }
-      } finally {
-        this.loading = false;
-      }
-    }
-  }
-}
+const { form, error, loading, handleSubmit } = useLoginForm();
 </script>
+

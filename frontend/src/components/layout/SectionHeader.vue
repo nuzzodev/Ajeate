@@ -34,13 +34,3 @@ defineProps({
 defineEmits(['primary-action']);
 </script>
 
-<style scoped>
-.tracking-widest { letter-spacing: 0.2rem; font-size: 0.8rem; }
-.brand-line { height: 4px; width: 100%; }
-.hover-scale { transition: transform 0.2s; }
-.hover-scale:active { transform: scale(0.95); }
-
-.section-header {
-  border-bottom: 1px solid rgba(255, 193, 7, 0.2);
-}
-</style>

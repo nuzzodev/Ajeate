@@ -31,20 +31,25 @@ class CombosController < ApplicationController
       @combo.id_combo = last_id + 1
     end
 
-    # Iniciamos la transacción para asegurar consistencia
     ActiveRecord::Base.transaction do
       if @combo.save
-        # Iteramos sobre los detalles del combo recién creado para descontar de las bandejas
         @combo.combo_detalles.each do |detalle|
-          bandeja = Bandeja.find(detalle.bandeja_fk)
+          bandeja = Bandeja.lock.find(detalle.bandeja_fk) # .lock ayuda a prevenir condiciones de carrera
           
-          # Verificamos si hay suficiente stock (Opcional pero recomendado)
           if bandeja.cantidad_disponible < detalle.cantidad_por_sabor
             raise ActiveRecord::Rollback, "Stock insuficiente en la bandeja #{bandeja.id_bandeja}"
           end
 
-          # Descontamos la cantidad
-          bandeja.update!(cantidad_disponible: bandeja.cantidad_disponible - detalle.cantidad_por_sabor)
+          # Calculamos el nuevo stock
+          nuevo_stock = bandeja.cantidad_disponible - detalle.cantidad_por_sabor
+          
+          # Actualizamos la bandeja
+          bandeja.update!(cantidad_disponible: nuevo_stock)
+
+          # Lógica de descarte: Si el stock es 0, aplicamos borrado lógico
+          if bandeja.cantidad_disponible == 0
+            bandeja.discard # Esto marca la bandeja como descartada (discarded_at)
+          end
         end
 
         render json: @combo, status: :created
@@ -52,8 +57,9 @@ class CombosController < ApplicationController
         render json: @combo.errors, status: :unprocessable_entity
       end
     rescue ActiveRecord::Rollback => e
-      # Si hubo un rollback manual (por stock), enviamos el error
       render json: { error: e.message }, status: :unprocessable_entity
+    rescue StandardError => e
+      render json: { error: "Error inesperado: #{e.message}" }, status: :internal_server_error
     end
   end
 
